@@ -9,5 +9,5 @@ def solution(array, commands):
         b = sorted(a)
         c = list(b)[k-1]
         
-        answer.append(c)
+        answer.append(list(sorted(array[i-1:j])
     return answer
