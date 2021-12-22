@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>모각코 삼행시</title>
+</head>
+<body>
+    <div id="textMo">모</div><br>
+    <div id="textGak">각</div><br>
+    <div id="textKo">코</div><br>
+    <button id="btnMo" onclick="삼행시('textMo','모처럼이니')">모</button>
+    <button id="btnGak" onclick="삼행시('textGak','각잡고 열심히 하면')">각</button>
+    <button id="btnKo" onclick="삼행시('textKo','코린이 탈출이다')">코</button>
+    
+    <script>
+        function 삼행시(textId, changeText){
+            document.getElementById(textId).innerHTML = changeText;
+        }
+    </script>
+</body>
+</html>
