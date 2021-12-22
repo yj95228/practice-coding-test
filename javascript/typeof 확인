@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>5일차 과제</title>
+    <style>
+        .console-check {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="whatType('John')">John</button>
+    <div id="John"></div>
+    <button onclick="whatType(3.14)">3.14</button>
+    <div id="3.14"></div>
+    <button onclick="whatType(NaN)">NaN</button>
+    <div id="NaN"></div>
+    <button onclick="whatType(false)">false</button>
+    <div id="false"></div>
+    <button onclick="consoleLog([1,2,3,4], 0)">[1,2,3,4]</button><br>
+    <div class="console-check">[1,2,3,4]</div>
+    <button onclick="consoleLog({name:'John', age:34}, 1)">{name:'John', age:34}</button><br>
+    <div class="console-check">{name:'John', age:34}</div>
+    <button onclick="consoleLog(new Date(), 2)">new Date()</button><br>
+    <div class="console-check">new Date()</div>
+    <button onclick="consoleLog(function () {}, 3)">function () {} </button><br>
+    <div class="console-check">function () {}</div>
+    <button onclick="whatType(null)">null</button>
+    <div id="null"></div>
+    <script>
+        function consoleLog(x, i){
+            console.log(typeof x);
+            console.log(x.constructor.toString().split(' ')[1]);
+            document.getElementsByClassName("console-check")[i].style.display = "block";
+            document.getElementsByClassName("console-check").item(i).innerHTML = 'console창에서 확인하세요'
+        }
+        function whatType(x){
+            console.log(typeof x);
+            document.getElementById(x).innerHTML = x + '의 type은 ' + typeof x + '<br>';
+        }
+    </script>
+</body>
+</html>
