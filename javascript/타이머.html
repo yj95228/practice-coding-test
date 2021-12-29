@@ -62,10 +62,6 @@
             let hour = parseInt( timer / 3600 ) % 24;
             let minute = parseInt( timer / 60 ) % 60;
             let second = timer % 60;
-            // const time = new Date();
-            // const hour = time.getHours();
-            // const minute = time.getMinutes();
-            // const second = time.getSeconds();
             clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
         }
         
@@ -77,19 +73,10 @@
 
         function start(){
             time = setTimeout(timeUp, 1000);
-            // setInterval(getTime, 1000);
-            // setInterval(function(){
-            //     timer++;
-            //     getTime();
-            // }, 1000);
         }
 
         function stop(){
             clearTimeout(time);
-            // let hour = parseInt( timer / 3600 ) % 24;
-            // let minute = parseInt( timer / 60 ) % 60;
-            // let second = timer % 60;
-            // clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
         }
 
         function reset(){
@@ -98,12 +85,6 @@
             getTime();
         }
         
-        // function init(){
-        //     setInterval(reset, 1000);   
-        // }
-
-        // init();
-        // reset();
         clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
     </script>
 </body>
