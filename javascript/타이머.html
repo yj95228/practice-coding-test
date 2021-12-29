@@ -28,9 +28,9 @@
 </head>
 <body>
     <h1 id="clock"></h1>
-    <button id="start" onclick="start(); this.onclick=null;">시작</button>
-    <button id="stop" onclick="stop()">멈춤</button>
-    <button id="reset" onclick="reset()">초기화</button>
+    <button id="start">시작</button>
+    <button id="stop">멈춤</button>
+    <button id="reset">초기화</button>
     
     <script>
         let clock = document.getElementById("clock");
@@ -38,6 +38,25 @@
         let hour = parseInt( timer / 3600 ) % 24;
         let minute = parseInt( timer / 60 ) % 60;
         let second = timer % 60;
+
+        let startClick = document.getElementById("start");
+        let stopClick = document.getElementById("stop");
+        let resetClick = document.getElementById("reset");
+
+        startClick.addEventListener("click", function(){
+            start();
+            startClick.disabled = true;
+        })
+
+        stopClick.addEventListener("click", function(){
+            stop();
+            startClick.disabled = false;
+        })
+
+        resetClick.addEventListener("click", function(){
+            reset();
+            startClick.disabled = false;
+        })
 
         function getTime(){
             let hour = parseInt( timer / 3600 ) % 24;
