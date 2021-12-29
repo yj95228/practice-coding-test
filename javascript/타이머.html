@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>7일차 과제</title>
+    <style>
+        h1{
+            font-size: 50px;
+        }
+        button {
+            width: 60px;
+            height: 30px;
+            margin: 2px;
+            background-color:#333;
+            border: none;
+            border-radius: 5px;
+            border-width: 1px;
+            font-size: 15px;
+            cursor: pointer;
+            color:#fff;
+            transition:all 1s;
+        }
+        button:hover{
+            color:#333;
+            box-shadow: 60px 0 0 0 rgba(255,255,255,0.9) inset;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="clock"></h1>
+    <button id="start" onclick="start(); this.onclick=null;">시작</button>
+    <button id="stop" onclick="stop()">멈춤</button>
+    <button id="reset" onclick="reset()">초기화</button>
+    
+    <script>
+        let clock = document.getElementById("clock");
+        let timer = 0;
+        let hour = parseInt( timer / 3600 ) % 24;
+        let minute = parseInt( timer / 60 ) % 60;
+        let second = timer % 60;
+
+        function getTime(){
+            let hour = parseInt( timer / 3600 ) % 24;
+            let minute = parseInt( timer / 60 ) % 60;
+            let second = timer % 60;
+            // const time = new Date();
+            // const hour = time.getHours();
+            // const minute = time.getMinutes();
+            // const second = time.getSeconds();
+            clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
+        }
+        
+        function timeUp(){
+            timer++;
+            getTime();
+            start();
+        }
+
+        function start(){
+            time = setTimeout(timeUp, 1000);
+            // setInterval(getTime, 1000);
+            // setInterval(function(){
+            //     timer++;
+            //     getTime();
+            // }, 1000);
+        }
+
+        function stop(){
+            clearTimeout(time);
+            // let hour = parseInt( timer / 3600 ) % 24;
+            // let minute = parseInt( timer / 60 ) % 60;
+            // let second = timer % 60;
+            // clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
+        }
+
+        function reset(){
+            // clearInterval(time);
+            timer = 0;
+            getTime();
+        }
+        
+        // function init(){
+        //     setInterval(reset, 1000);   
+        // }
+
+        // init();
+        // reset();
+        clock.innerHTML = `${hour<10 ? `0${hour}`:hour}:${minute<10 ? `0${minute}`:minute}:${second<10 ? `0${second}`:second}`;
+    </script>
+</body>
+</html>
