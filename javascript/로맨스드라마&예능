@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>8일차 과제</title>
+    <title>9일차 과제</title>
     <style>
         nav{ /* flex container */
             display:flex;
