@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>7일차 과제</title>
     <style>
+        html,body {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            height:100%;
+        }
+        div#container{
+            margin: 0 auto;
+        }
         h1{
             font-size: 50px;
         }
@@ -29,10 +38,14 @@
     </style>
 </head>
 <body>
-    <h1 id="clock"></h1>
-    <button id="start">시작</button>
-    <button id="stop">멈춤</button>
-    <button id="reset">초기화</button>
+    <div id="container">
+        <h1 id="clock"></h1>
+        <div id="button">
+            <button id="start">시작</button>
+            <button id="stop">멈춤</button>
+            <button id="reset">초기화</button>
+        </div>
+    </div>
     
     <script>
         let clock = document.getElementById("clock");
