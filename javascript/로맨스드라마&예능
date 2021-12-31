@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>8일차 과제</title>
+    <style>
+        nav{ /* flex container */
+            display:flex;
+            justify-content: space-between;
+        }
+        .tab {
+            flex: 1 1 30%;
+        }
+        a {
+            text-decoration: none;
+        }
+        .movie{ /* flex item */
+            width:100%;
+            height:3em;
+            font-size: 16px;
+            padding:0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom:none;
+            border-color: midnightblue;
+            background-color: midnightblue;
+            color:yellow;
+        }
+        .movie:hover{
+            background-color:mintcream;
+            font-weight: bold;
+            color:red;
+        }
+        article{
+            display: none;
+            height: 100px;
+        }
+        article:target { /*grid container*/
+            display:grid;
+            padding:10px;
+            border: 2px solid ;
+        }
+        .tag { /*grid item*/
+            display: inline-flex;
+            font-weight: bold;
+            background-color: #eee;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="tab"><a href="#tab1"><button class="movie">그해우리는</button></a></span>
+        <span class="tab"><a href="#tab2"><button class="movie">환승연애</button></a></span>
+        <span class="tab"><a href="#tab3"><button class="movie">연애의발견</button></a></span>
+    </nav>
+    <article id="tab1" class="tabCon">
+        <div>
+            <span class="tag">#드라마</span>
+            <span class="tag">#SBS</span>
+            <span class="tag">#최우식</span>
+            <span class="tag">#정다미</span>
+        </div>
+        <div>지금 방영중인 월화드라마로 5년의 연애 후 이별 그 후 5년만에 다시 만나 10년이 흘러 펼쳐지는 로맨스 드라마</div>
+    </article>
+    <article id="tab2" class="tabCon">
+        <div>
+            <span class="tag">#예능</span>
+            <span class="tag">#TVING</span>
+            <span class="tag">#헤어진 5쌍의 커플</span>
+        </div>
+        <div>다양한 이유로 이별한 커플들이 모여 지나간 사랑을 되짚고 새로운 사랑을 찾아나가는 연애 리얼리티</div>
+    </article>
+    <article id="tab3" class="tabCon">
+        <div>
+            <span class="tag">#드라마</span>
+            <span class="tag">#KBS</span>
+            <span class="tag">#정유미</span>
+            <span class="tag">#에릭</span>
+        </div>
+        <div>과거 남자친구와의 연애를 끝내고 새로운 사랑을 시작한 여자 앞에 자신의 잘못을 반성한 옛 남자친구가 돌아오며 발생하는 세 남녀의 사랑이야기를 그린 드라마</div>
+    </article>
+
+    <script>
+        location.href = "#tab1";
+    </script>
+</body>
+</html>
