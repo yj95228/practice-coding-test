@@ -1,7 +1,7 @@
 function solution(x) {
-    let newArray = x.toString().split("");
+    let newArray = String(x).split("");
     let sumResult = newArray.reduce((acc,cur) => {
-        return parseInt(acc) + parseInt(cur);
+        return Number(acc) + Number(cur);
     })
     let answer = x%sumResult === 0 ? true : false;
     return answer;
