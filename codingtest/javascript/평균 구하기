@@ -1,0 +1,4 @@
+function solution(arr) {
+    let sum = arr.reduce((arr,cur) => { return arr + cur; });
+    return sum/arr.length;
+}
