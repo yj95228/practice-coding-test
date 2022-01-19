@@ -1,0 +1,6 @@
+function solution(n) {
+    let intToArray = String(n).split('');
+    let reverseArray = intToArray.map(Number).sort().reverse();
+    let answer = reverseArray.join('');
+    return Number(answer);
+}
