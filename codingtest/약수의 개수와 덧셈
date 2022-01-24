@@ -1,0 +1,11 @@
+function solution(left, right) {
+    let answer = 0;
+    for(let num = left; num <= right; num++){
+        let yaksu = 0;
+        for(let divider = 1; divider <= num; divider++){
+            yaksu += num % divider === 0;
+        }
+        answer = yaksu % 2 === 0 ? answer + num : answer - num;
+    }
+    return answer;
+}
