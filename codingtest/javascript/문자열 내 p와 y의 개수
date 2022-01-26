@@ -1,0 +1,15 @@
+const pReducer = function(accumulator, value) {
+  if (value.toUpperCase().includes('P')) accumulator++
+  return accumulator;
+}
+const yReducer = function(accumulator, value) {
+  if (value.toUpperCase().includes('Y')) accumulator++
+  return accumulator;
+}
+
+function solution(s){
+    let sArray = s.split('');
+    let pCount = sArray.reduce(pReducer, 0);
+    let yCount = sArray.reduce(yReducer, 0);
+    return pCount === yCount
+}
