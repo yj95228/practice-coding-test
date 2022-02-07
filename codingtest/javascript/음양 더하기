@@ -1,0 +1,4 @@
+function solution(absolutes, signs) {
+    return signs.map(x => x === false ? -1 : 1)
+                .reduce((acc,val,i) => acc += val * absolutes[i], 0);
+}
