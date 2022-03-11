@@ -1,0 +1,13 @@
+//JS
+
+function selectSort(array) {
+    let answer = [];
+    while (answer.length < array.length) {
+        let newArray = array.filter(value => !answer.includes(value));
+        let min = Math.min(...newArray);
+        answer.push(min);
+    }
+    return answer;
+}
+
+selectSort([9, 6, 7, 3, 5]);
