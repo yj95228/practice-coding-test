@@ -1,0 +1,31 @@
+function binarySearch(arr, length, target, start, end) {
+    start = 0;
+    end = length - 1;
+    
+    while (end >= start) {
+        let mid = Math.floor((start + end) / 2);
+
+        if (arr[mid] === target) {
+            return true;
+        } else if (arr[mid] > target) {
+            end = mid - 1;
+            binarySearch(arr, target, start, end);
+        } else {
+            start = mid + 1;
+            binarySearch(arr, target, start, end);
+        }
+    }
+    return false;
+}
+
+let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+let length = arr.length;
+let target = 5;
+
+let result = binarySearch(arr, length, target);
+
+if (result) {
+    console.log(`배열에 ${target}가 존재합니다.`);
+} else {
+    console.log(`배열에 ${target}가 존재하지 않습니다.`);
+}
