@@ -1,0 +1,17 @@
+function validAnagram(a,b){
+  // add whatever parameters you deem necessary - good luck!
+  if(a.length !== b.length){
+      return false;
+  }
+  let arrayB = b.split("");
+  for(let letter of a){
+      if(arrayB.includes(letter)){
+          arrayB.splice(arrayB.indexOf(letter),1);
+      }else{
+          return false;
+      }
+  }
+  if(arrayB.length === 0){
+    return true;
+  }
+}
