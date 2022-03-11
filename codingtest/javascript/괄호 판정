@@ -1,0 +1,15 @@
+function bracketCheck(string) {
+    while (string.includes("{}")) {
+        string = string.split('()').join('');
+    }
+    if (string === "") {
+        return true;
+    } 
+    else {
+        return false;
+    }
+}
+bracketCheck("{{}}{}")
+bracketCheck("{{}")
+bracketCheck("{{{}}}")
+bracketCheck("}{{{}}}{")
