@@ -1,0 +1,26 @@
+const text = `1 30
+2 20
+5 23
+3 40
+9 1
+8 50
+7 13`;
+
+const workArray = text.split('\n').map(work => work.split(' '));
+let workTime = 0;
+let workTotalTime = 0;
+let workList = '';
+for(let work of workArray){
+  if(workTime + +work[1] <= 50){
+    workList = `${workList}${work[0]} `;
+    workTime += +work[1];
+    workTotalTime += +work[1];
+  }else{
+    console.log(workList);
+    workList = `${work[0]} `;
+    workTime = +work[1];
+    workTotalTime += +work[1] + 10;
+  }
+}
+console.log(workList);
+console.log(`총 소요시간 : ${workTotalTime}분`);
