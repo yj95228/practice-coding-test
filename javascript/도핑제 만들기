@@ -1,0 +1,32 @@
+const energyDrinkList =
+`0 100 320
+1 232 720
+2 600 103
+3 100 124
+4 730 1076
+5 185 125
+6 104 600
+7 392 705
+8 33 265
+9 89 421`;
+const energyDrinkArray = energyDrinkList.split('\n').map(a => a.split(' ').map(b => +b));
+let answer = {};
+
+for (let i = 0; i < energyDrinkArray.length - 2; i++) {
+  let taurine = energyDrinkArray[i][2] + energyDrinkArray[i+1][2] + energyDrinkArray[i+2][2];
+  let caffein = energyDrinkArray[i][1] + energyDrinkArray[i+1][1] + energyDrinkArray[i+2][1];
+  let capacity = taurine - caffein;
+  answer[i] = capacity;
+}
+
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
+
+const idx1 = getKeyByValue(answer, Math.max(...Object.values(answer)))
+const idx2 = +idx1 + 1;
+const idx3 = +idx1 + 2;
+
+console.log(`${idx1} ${idx2} ${idx3}의 타우린 합은`,
+`${energyDrinkArray[idx1][2] + energyDrinkArray[idx2][2] + energyDrinkArray[idx3][2]}`,
+`카페인 합은 ${energyDrinkArray[idx1][1] + energyDrinkArray[idx2][1] + energyDrinkArray[idx3][1]}`)
