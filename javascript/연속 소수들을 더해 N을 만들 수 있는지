@@ -1,0 +1,26 @@
+function answer(n) {
+    const sqrt = Math.floor(Math.sqrt(n) + 1);
+    let sum = 0;
+    let primeList = [...Array(n+1).keys()];
+
+    for (let i = 2; i < sqrt; i++) {
+        if (primeList[i]) {
+            for (let j = i * i; j < n + 1; j += i) {
+                primeList[j] = 0;
+            }
+        }
+    }
+
+    for(let i of primeList.slice(2)) {
+        sum += i;
+        if (sum > n) {
+            return `${n}을 만들 수 없습니다`;
+        } else if (sum === n) {
+            return `[${primeList.filter(x => x > 1 && x <= i)}]의 합은 ${n}입니다.`;
+        }
+    }
+}
+
+answer(17)
+answer(41)
+answer(20)
