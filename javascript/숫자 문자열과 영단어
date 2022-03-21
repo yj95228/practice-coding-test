@@ -1,0 +1,10 @@
+function solution(s) {
+    const numArray = ['zero','one','two','three','four','five','six','seven','eight','nine'];
+    while(numArray.filter(num => s.includes(num)).length){
+        s = numArray.reduce((acc,val) => {
+            return acc.replace(val,numArray.indexOf(val))
+        }, s);
+    }
+    let answer = +s;
+    return answer;
+}
