@@ -1,0 +1,15 @@
+function countUniqueValues(arr){
+  // add whatever parameters you deem necessary - good luck!
+  let i = 0;
+  let answer = 0;
+  if(arr.length){
+      answer = 1;
+      for(let j = 0; j < arr.length; j++){
+          if(arr[i] !== arr[j]) {
+              i = j;
+              answer++;
+          }
+      }
+  }
+  return answer
+}
