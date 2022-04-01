@@ -1,14 +1,10 @@
 function binarySearch(arr,item){
-  // add whatever parameters you deem necessary - good luck
   let i = 0;
   let j = arr.length - 1;
   let newIndex = parseInt((i+j)/2);
   while(item !== arr[newIndex] && i < j){
-      if(item < arr[newIndex]){
-          j = newIndex - 1;
-      }else {
-          i = newIndex + 1;
-      }
+      if(item < arr[newIndex]) j = newIndex - 1;
+      else i = newIndex + 1;
       newIndex = parseInt((i+j)/2);
   }
   return item === arr[newIndex] ? newIndex : -1;
