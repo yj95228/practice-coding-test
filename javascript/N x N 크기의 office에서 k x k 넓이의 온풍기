@@ -1,0 +1,15 @@
+function solution(office, k) {
+    let answerList = [];
+    for(let i = 0; i <= office.length - k; i++){
+        for(let j = 0; j <= office.length - k; j++){
+            let answer = 0;
+            for(let m = 0; m < k; m++){
+                for(let n = 0; n < k; n++){
+                    answer += office[i+m][j+n];
+                }
+            }
+            answerList.push(answer);
+        }
+    }
+    return Math.max(...answerList);
+}
