@@ -1,0 +1,13 @@
+function solution(n,a,b){
+    let round = 1;
+    let gameSplit = 2;
+    while(n > gameSplit){
+        if(Math.ceil(a/gameSplit) === Math.ceil(b/gameSplit)){
+            return round;    
+        }else{
+            round++;
+            gameSplit *= 2;
+        }        
+    }
+    return round;
+}
