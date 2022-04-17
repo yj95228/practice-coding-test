@@ -1,0 +1,14 @@
+function solution(n) {
+    let answer = 0;
+    let 뒤집힌3진법 = '';
+    while(n>0){
+        뒤집힌3진법 += n%3;
+        n = parseInt(n/3);
+    }
+    let idx = 1;
+    for(let i of 뒤집힌3진법.split('').reverse().join('')){
+        answer += i*idx;
+        idx *= 3;
+    }
+    return answer;
+}
