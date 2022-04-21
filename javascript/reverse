@@ -1,0 +1,7 @@
+function reverse(string){
+  // add whatever parameters you deem necessary - good luck!
+  return [...string].reverse().join('');
+}
+
+// reverse('awesome') // 'emosewa'
+// reverse('rithmschool') // 'loohcsmhtir'
