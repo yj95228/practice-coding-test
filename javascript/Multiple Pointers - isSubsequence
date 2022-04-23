@@ -1,0 +1,14 @@
+function isSubsequence(short, long) {
+  // good luck. Add any arguments you deem necessary.
+  let i = 0;
+  let j = 0;
+  while(i < short.length && j < long.length) {
+    if(short[i] === long[j]) {
+      i++;
+      j++;
+    } else {
+      j++;
+    }
+  }
+  return i === shortString.length;
+}
