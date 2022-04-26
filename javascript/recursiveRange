@@ -1,0 +1,7 @@
+// SAMPLE INPUT/OUTPUT
+// recursiveRange(6) // 21
+// recursiveRange(10) // 55 
+
+function recursiveRange(n){
+    return n === 1 ? 1 : n + recursiveRange(n-1)
+}
