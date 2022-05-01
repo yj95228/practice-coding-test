@@ -1,0 +1,14 @@
+function solution(passes, minutes) {
+    // 0기본요금, 1기본시간, 2추가 시간 간격, 3추가 요금
+    const costArray = passes.map(pass => {
+        if(minutes < pass[1]) return pass[0]; // 기본시간 이내이면 기본요금
+        let repeat = 1;
+        let addMinutes = minutes - pass[1];
+        while(true){
+            if(addMinutes <= pass[2]) return pass[0] + pass[3]*repeat;
+            addMinutes = minutes - pass[1] - pass[2]*repeat;
+            repeat++;
+        }
+    })
+    return Math.min(...costArray);
+}
