@@ -1,0 +1,10 @@
+// https://programmers.co.kr/learn/courses/30/lessons/12915?language=javascript
+function solution(strings, n) {
+    const alphabet = strings.map(x => x[n])
+    const index = alphabet.map(x => alphabet.indexOf(x))
+    let sortedArray = strings.sort((a, b) => {
+        if(a[n].localeCompare(b[n]) === 0) return a.localeCompare(b)
+        return a[n].localeCompare(b[n])
+    })
+    return sortedArray;
+}
