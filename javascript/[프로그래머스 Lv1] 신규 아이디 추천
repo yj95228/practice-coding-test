@@ -1,0 +1,14 @@
+// https://programmers.co.kr/learn/courses/30/lessons/72410?language=javascript
+function solution(new_id) {
+    var answer = '';
+    recommendId = new_id.toLowerCase()
+                .replace(/[^a-z0-9-_\.]/g,'')
+                .replace(/\.{2,}/g,'.')
+                .replace(/^\./g,'')
+                .replace(/\.$/g,'')
+    if(!recommendId) recommendId = 'a'
+    if(recommendId.length >= 16) recommendId = recommendId.slice(0,15)
+    recommendId = recommendId.replace(/\.$/g,'')
+    while(recommendId.length <= 2) recommendId = `${recommendId}${recommendId[recommendId.length-1]}`
+    return recommendId;
+}
