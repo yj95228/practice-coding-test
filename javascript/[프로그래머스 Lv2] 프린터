@@ -1,0 +1,21 @@
+// https://programmers.co.kr/learn/courses/30/lessons/42587?language=javascript
+function solution(priorities, location) {
+    let answer = 0;
+    while(priorities.length){
+        // 가장 앞 문서보다 중요도가 높은 문서가 한 개라도 있으면
+        if(priorities.slice(1).filter(x => x > priorities[0]).length){
+            // location이 0이었으면 제일 뒤로
+            if(!location) {
+                location = priorities.length - 1
+            }else{ // 아니면 1칸 앞으로
+                location--;
+            }
+            priorities = [...priorities.slice(1),priorities[0]]
+        }else{
+            answer++;
+            priorities.shift()
+            if(!location) {return answer}
+            else {location--}
+        }   
+    }
+}
