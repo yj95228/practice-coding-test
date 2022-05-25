@@ -1,0 +1,21 @@
+// https://programmers.co.kr/learn/courses/30/lessons/42862?language=javascript
+function solution(n, lost, reserve) {
+    let intersect = lost.filter(x => reserve.includes(x))
+    lost = lost.filter(x => !intersect.includes(x))
+    reserve = reserve.filter(x => !intersect.includes(x))
+    let answer = n - lost.length;
+    lost.sort((a, b) => {return a - b})
+    lost.forEach(student => {
+        if(reserve.includes(student - 1)){
+            reserve = reserve.filter(x => x !== student - 1);
+            answer++;
+        }else if(reserve.includes(student)){
+            reserve = reserve.filter(x => x !== student);
+            answer++;
+        }else if(reserve.includes(student + 1)){
+            reserve = reserve.filter(x => x !== student + 1);
+            answer++;
+        }
+    })
+    return answer;
+}
