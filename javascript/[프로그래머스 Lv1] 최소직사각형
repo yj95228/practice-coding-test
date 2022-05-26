@@ -1,0 +1,9 @@
+// https://programmers.co.kr/learn/courses/30/lessons/86491?language=javascript
+function solution(sizes) {
+    let width = [], height = [];
+    sizes.map(size => size.sort((a,b) => a-b)).forEach(size => {
+        width = [...width, size[0]];
+        height = [...height, size[1]];
+    })
+    return Math.max(...width)*Math.max(...height);
+}
