@@ -1,0 +1,9 @@
+// https://programmers.co.kr/learn/courses/30/lessons/12951?language=javascript
+
+function solution(s) {
+    let arr = s.split(' ')
+    let answer = arr.map((v) => {
+        return v === '' ? '' : `${v[0].toUpperCase()}${v.slice(1).toLowerCase()}`
+    }).join(' ');
+    return answer;
+}
