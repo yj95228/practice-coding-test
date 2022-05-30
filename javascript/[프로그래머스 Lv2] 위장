@@ -1,0 +1,17 @@
+// https://programmers.co.kr/learn/courses/30/lessons/42578?language=javascript
+function solution(clothes) {
+    let answer = 1;
+    let clothesObj = {}
+    for(const i of clothes){
+        if(clothesObj[i[1]]){
+            clothesObj[i[1]]++
+        }else{
+            clothesObj[i[1]] = 1;
+        }
+    }
+    const clothesCount = Object.values(clothesObj);
+    for(const i of clothesCount){
+        answer *= i + 1
+    }
+    return answer - 1
+}
