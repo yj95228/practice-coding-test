@@ -15,3 +15,16 @@ function solution(clothes) {
     }
     return answer - 1
 }
+
+//코드 간결하게
+function solution(clothes) {
+    let answer = 1;
+    let clothesObj = {}
+    for(const i of clothes){
+        clothesObj[i[1]] = clothesObj[i[1]] ? clothesObj[i[1]] + 1 : 1
+    }
+    for(const i of Object.values(clothesObj)){
+        answer *= i + 1
+    }
+    return answer - 1
+}
