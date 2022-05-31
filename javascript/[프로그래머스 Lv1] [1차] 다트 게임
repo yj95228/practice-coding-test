@@ -1,0 +1,39 @@
+// https://programmers.co.kr/learn/courses/30/lessons/17682?language=javascript
+
+function solution(dartResult) {
+    const dartArray = dartResult.split(/(S|D|T|\*|\#)/).filter(x => x.length);
+    const numArray = [];
+    const strArray = [];
+    for(const i of dartArray){
+        if(isNaN(i)){
+            strArray.push(i)
+        }else{
+            numArray.push(i)
+        }
+    }
+    let i = 0;
+    strArray.forEach(x => {
+        switch(x){
+            case 'S':
+                numArray[i] **= 1;
+                i++;
+                break;
+            case 'D':
+                numArray[i] **= 2;
+                i++;
+                break;
+            case 'T':
+                numArray[i] **= 3;
+                i++;
+                break;
+            case '*':
+                if(i > 1) numArray[i-2] *= 2;
+                numArray[i-1] *= 2;
+                break;
+            case '#':
+                numArray[i-1] *= -1;
+            break;
+        }
+    })
+    return numArray.reduce((a,v) => a+v);
+}
