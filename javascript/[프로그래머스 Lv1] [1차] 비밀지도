@@ -1,0 +1,12 @@
+// https://programmers.co.kr/learn/courses/30/lessons/17681?language=javascript
+function solution(n, arr1, arr2) {
+    let answer = Array.from(arr1).map(x => Array.from(arr2).fill(0))
+    const mapArr1 = arr1.map(x => x.toString(2).padStart(n,0).split(''))
+    const mapArr2 = arr2.map(x => x.toString(2).padStart(n,0).split(''))
+    for(let i = 0; i < n; i++){
+        for(let j = 0; j < n; j++){
+            answer[i][j] = mapArr1[i][j] === '1' || mapArr2[i][j] === '1' ? '#' : ' '
+        }
+    }
+    return answer.map(x => x.join(''));
+}
