@@ -1,0 +1,20 @@
+// https://programmers.co.kr/learn/courses/30/lessons/60057?language=javascript
+function solution(s) {
+    let answer = [];
+    let letter = '';
+    for(let n = 1; n < s.length + 1; n++){
+        let i = 0;
+        let shortTxt = '';
+        while(i < s.length/n) {
+            let j = 0;
+            let letter = s.slice(n*i, n*i+n);
+            while(letter === s.slice(n*i, n*i+n)){
+                j++;
+                i++;
+            }
+            shortTxt += `${j===1 ? '' : j}${letter}`
+        }
+        answer.push(shortTxt);
+    }
+    return Math.min(...answer.map(txt => txt.length));
+}
