@@ -1,0 +1,14 @@
+// https://programmers.co.kr/learn/courses/30/lessons/43165?language=javascript
+function solution(numbers, target) {
+    let answer = 0;
+    for(let i = 0; i < 2**numbers.length; i++){
+        const numSlice = numbers.slice()
+        const binaryString = i.toString(2).padStart(numbers.length, '0')
+        for(let j = 0; j < binaryString.length; j++){
+            if(binaryString[j] === '0') numSlice[j] *= -1
+        }
+        const calculated = numSlice.reduce((prev, current) => prev + current)
+        if(calculated === target) answer++
+    }
+    return answer;
+}
