@@ -1,0 +1,18 @@
+//https://school.programmers.co.kr/learn/courses/30/lessons/42888?language=javascript#
+function solution(record) {
+    const recordArray = record.map(r => r.split(' '))
+    const result = {}
+    for(const r of recordArray.filter(r => r[0] !== 'Leave')){
+        if(result[r[1]]) result[r[1]].push(r[2])
+        else result[r[1]] = [r[2]]
+    }
+    for (const id in result){
+        const len = result[id].length
+        result[id] = result[id][len-1]
+    }
+    const log = recordArray.filter(r => r[0] !== 'Change')
+    const answer = log.map(r => {
+        return r[0] === 'Enter' ? `${result[r[1]]}님이 들어왔습니다.` : `${result[r[1]]}님이 나갔습니다.`
+    });
+    return answer;
+}
