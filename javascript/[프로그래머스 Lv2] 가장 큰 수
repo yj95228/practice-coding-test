@@ -1,0 +1,7 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/42746?language=javascript#
+function solution(numbers) {
+    const answer = numbers.sort((a,b) => {
+        return parseInt(b.toString() + a.toString()) - parseInt(a.toString() + b.toString())
+    }).join('')
+    return answer.split('').every(v => v === '0') ? '0' : answer
+}
