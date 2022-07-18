@@ -1,0 +1,22 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/77485?language=javascript
+function solution(rows, columns, queries) {
+    let answer = [];
+    let matrix = new Array(rows)
+    for(let i=0; i<rows; i++) matrix[i] = new Array(columns)
+    for(let i=0; i<rows; i++) for(let j=0; j<columns; j++) matrix[i][j] = i * columns + j + 1
+    for(const query of queries){
+        let list = []
+        const [row1, col1, row2, col2] = [query[0]-1, query[1]-1, query[2]-1, query[3]-1]
+        for(let i=col1; i<col2; i++) list.push(matrix[row1][i])
+        for(let i=row1; i<row2; i++) list.push(matrix[i][col2])
+        for(let i=col2; i>col1; i--) list.push(matrix[row2][i])
+        for(let i=row2; i>row1; i--) list.push(matrix[i][col1])
+        list = [list.pop(), ...list]
+        answer.push(Math.min(...list))
+        for(let i=col1; i<col2; i++) matrix[row1][i] = list.shift()
+        for(let i=row1; i<row2; i++) matrix[i][col2] = list.shift()
+        for(let i=col2; i>col1; i--) matrix[row2][i] = list.shift()
+        for(let i=row2; i>row1; i--) matrix[i][col1] = list.shift()
+    }
+    return answer;
+}
