@@ -1,0 +1,8 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/62048?language=javascript
+function solution(w, h) {
+    let answer = 0;
+    if(w > h) for(let x = 1; x < h; x++) answer += parseInt(w*x/h)
+    else if(w < h) for(let x = 1; x < w; x++) answer += parseInt(h*x/w)
+    else return w*h - w
+    return answer*2;
+}
