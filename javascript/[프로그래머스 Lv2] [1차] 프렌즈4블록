@@ -1,0 +1,35 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/17679?language=javascript
+function solution(m, n, board) {
+    const blocks = board.map(x => x.split(''))
+    while(1){
+        let breakList = []
+        for(let i = 0; i < m-1; i++){
+            for(let j = 0; j < n-1; j++){
+                if(blocks[i][j] === blocks[i+1][j]
+                   && blocks[i][j] === blocks[i][j+1]
+                   && blocks[i][j] === blocks[i+1][j+1]
+                   && blocks[i][j]) breakList.push([i,j])
+            }
+        }
+        if(!breakList.length) break;
+        breakList.forEach(([i,j]) => {
+            blocks[i][j] = null
+            blocks[i+1][j] = null
+            blocks[i][j+1] = null
+            blocks[i+1][j+1] = null
+        })
+        for(let i = m-1; i >= 0; i--){
+            for(let j = 0; j < n; j++){
+                if(!blocks[i][j]){
+                    for(let up = i-1; up >= 0; up--){
+                        tmp = blocks[up][j]
+                        blocks[i][j] = blocks[up][j]
+                        blocks[up][j] = null
+                        if(tmp) break
+                    }
+                }
+            }
+        }
+    }
+    return m*n - blocks.map(x => x.join('')).join('').length;
+}
