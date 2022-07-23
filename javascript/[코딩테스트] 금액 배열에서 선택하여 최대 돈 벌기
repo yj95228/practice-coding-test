@@ -1,0 +1,18 @@
+// 우리은행
+// https://programmers.co.kr/tryouts/45183/submissions/16983700?challengeable_type=ChallengeAlgorithm
+function solution(boxes, m, k) {
+    // 각 상자에서 만원당 벌 수 있는 금액 배열 boxes
+    // 최초에 가진 돈 m, 돈을 버는 날 수 k
+    for(let i = 0; i < k; i++){
+        const moneys = []
+        for(let idx in boxes){
+            // 만원당 돈이 증가
+            moneys.push(parseInt(parseInt(m/10000)*boxes[idx]))
+        }
+        // 100,000원 이하의 금액을 벌 수 있는 방법
+        const notMoreMoney = moneys.filter(x => x <= 100000)
+        if(![...notMoreMoney].length) break;
+        m += Math.max(...notMoreMoney)
+    }
+    return m;
+}
