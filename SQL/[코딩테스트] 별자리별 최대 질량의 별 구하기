@@ -1,0 +1,15 @@
+-- 우리은행
+-- https://programmers.co.kr/tryouts/45183/submissions/2491813?challengeable_type=ChallengeSql
+SELECT
+    CONSTELLATION,
+    NAME
+FROM (
+    SELECT
+        CONSTELLATION,
+        NAME,
+        RANK() OVER(PARTITION BY CONSTELLATION ORDER BY MASS DESC)
+            AS STARRANK
+    FROM STARS
+) AS STARSRANK
+WHERE STARRANK = 1
+ORDER BY CONSTELLATION
