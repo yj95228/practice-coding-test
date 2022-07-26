@@ -1,0 +1,24 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/92334?language=javascript
+function solution(id_list, report, k) {
+    const reportObj = {}, reportedObj = {}, reportedId = [];
+    report.forEach(ids => {
+        const [reporter, reported] = ids.split(' ')
+        if(reportObj[reporter]) reportObj[reporter].push(reported)
+        else reportObj[reporter] = [reported]
+    })
+    for(const reporter in reportObj){
+        reportObj[reporter] = [...new Set(reportObj[reporter])]
+        reportObj[reporter].forEach(reported => {
+            reportedObj[reported] = (reportedObj[reported] || 0) + 1
+        })
+    }
+    for(const reported in reportedObj){
+        if(reportedObj[reported] >= k) reportedId.push(reported)
+    }
+    const answer = id_list.map(reporter => {
+        return reportObj[reporter]
+        ? reportObj[reporter].filter(id => reportedId.includes(id)).length 
+        : 0
+    })
+    return answer;
+}
