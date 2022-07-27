@@ -1,0 +1,23 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12929?language=javascript
+
+// 카탈란 수 : https://suhak.tistory.com/77
+function solution(n) {
+    let answer = 1;
+    for(let x = 2*n; x > n; x--){
+        answer *= x
+    }
+    for(let x = n; x > 0; x--){
+        answer /= x
+    }
+    return answer/(n+1)
+}
+
+// recursive solution
+function parenthesisCase(n) {
+    let answer = 0;
+    if(n == 0) return 1;
+    for(let i = 0; i < n; i++) {    
+        answer += parenthesisCase(i) * parenthesisCase(n - i - 1); 
+    }
+    return answer;
+}
