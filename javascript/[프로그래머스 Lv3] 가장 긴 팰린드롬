@@ -1,0 +1,16 @@
+//https://school.programmers.co.kr/learn/courses/30/lessons/12904?language=javascript#
+function solution(s){
+    let strArray = [0]
+    for(let i = 0; i < s.length; i++){
+        // 효율성2 통과 위해 Math.abs(i-j) > Math.max(...strArray) 조건 추가
+        for(let j = s.length; i < j && Math.abs(i-j) > Math.max(...strArray); j--){
+            let str = s.slice(i,j)
+            // 효율성1 통과 위해 str.split('').reverse().join('') 대신 break
+            for(let k = 0; k < str.length; k++){
+                if(str[k] !== str[str.length-1-k]) break;
+                if(k === str.length-1) strArray.push(str.length);
+            }
+        }
+    }
+    return Math.max(...strArray)
+}
