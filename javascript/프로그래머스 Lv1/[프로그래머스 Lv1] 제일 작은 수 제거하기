@@ -1,0 +1,5 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12935?language=javascript
+function solution(arr) {
+    let answer = arr.filter(x => x !== Math.min(...arr));
+    return answer.length ? answer : [-1];
+}

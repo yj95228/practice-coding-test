@@ -1,0 +1,5 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12910?language=javascript
+function solution(arr, divisor) {
+    let answer = arr.filter(value => value % divisor === 0);
+    return answer.length ? answer.sort((a,b) => a-b) : [-1];
+}

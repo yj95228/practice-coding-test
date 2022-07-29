@@ -1,0 +1,15 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/42586?language=javascript
+function solution(progresses, speeds) {
+    let answer = [];
+    while(progresses.length){
+        let finishWork = 0;
+        progresses = progresses.map((work, idx) => work + speeds[idx])
+        while(progresses[0] >= 100){
+            progresses.shift();
+            speeds.shift();
+            finishWork++;
+        }
+        if(finishWork) answer.push(finishWork);
+    }
+    return answer;
+}

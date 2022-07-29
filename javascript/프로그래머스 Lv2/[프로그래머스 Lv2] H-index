@@ -1,0 +1,8 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/42747?language=javascript
+function solution(citations) {
+    let n = citations.length;
+    while(citations.filter(x => x >= n).length < n){
+        n--;
+    }
+    return n;
+}

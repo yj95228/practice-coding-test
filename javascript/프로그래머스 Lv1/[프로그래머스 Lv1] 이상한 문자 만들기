@@ -1,0 +1,16 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12930?language=javascript
+function solution(s) {
+    let answer = '';
+    let wordArray = s.split('');
+    let flag = true;
+    for(let i = 0; i < wordArray.length; i++){
+        if(flag === true && wordArray[i] !== ' '){
+            flag = false;
+            answer += wordArray[i].toUpperCase();
+        }else{
+            flag = true;
+            answer += wordArray[i].toLowerCase();
+        }
+    }
+    return answer
+}

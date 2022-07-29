@@ -1,7 +1,0 @@
-function solution(citations) {
-    let n = citations.length;
-    while(citations.filter(x => x >= n).length < n){
-        n--;
-    }
-    return n;
-}

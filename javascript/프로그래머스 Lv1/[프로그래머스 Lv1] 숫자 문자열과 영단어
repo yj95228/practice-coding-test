@@ -1,0 +1,24 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/81301
+function solution(s) {
+    const numArray = ['zero','one','two','three','four','five','six','seven','eight','nine'];
+    while(numArray.filter(num => s.includes(num)).length){
+        s = numArray.reduce((acc,val) => {
+            return acc.replace(val,numArray.indexOf(val))
+        }, s);
+    }
+    let answer = +s;
+    return answer;
+}
+
+// 다른 분의 멋진 풀이
+function solution(s) {
+    let numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    let answer = s;
+
+    for(let i=0; i< numbers.length; i++) {
+        let arr = answer.split(numbers[i]);
+        answer = arr.join(i);
+    }
+
+    return Number(answer);
+}

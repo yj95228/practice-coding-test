@@ -1,0 +1,7 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12933?language=javascript
+function solution(n) {
+    let intToArray = String(n).split('');
+    let reverseArray = intToArray.map(Number).sort().reverse();
+    let answer = reverseArray.join('');
+    return Number(answer);
+}

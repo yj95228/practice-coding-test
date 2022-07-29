@@ -1,0 +1,28 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/42576?language=javascript
+
+// 첫번째 시도 : array로 시도해서인지 효율성에서 0점 나옴
+
+function solution(participant, completion) {
+    completion.forEach(player => {
+        const index = participant.indexOf(player)
+        participant.splice(index,1);
+    })
+    return participant[0];
+}
+
+// 두번째 시도 : object로 시도한 결과 효율성 통과
+
+function solution(participant, completion) {
+    obj = {};
+    participant.forEach(player => {
+        if(obj[player] > 0){
+            obj[player]++;
+        }else{
+            obj[player] = 1;
+        }
+    })
+    completion.forEach(player => {
+        obj[player]--;
+    })
+    return Object.keys(obj).filter(player => obj[player] > 0).toString('');
+}

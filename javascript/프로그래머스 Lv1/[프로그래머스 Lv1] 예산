@@ -1,0 +1,12 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12982?language=javascript
+function solution(d, budget) {
+    let answer = [];
+    const length = d.length;
+    for(let i = 0; i < length; i++){
+        let min = Math.min(...d);
+        if(min > budget) break; else{budget -= min;}
+        let minIndex = d.indexOf(min);
+        answer.push(...d.splice(minIndex,1));
+    }
+    return answer.length;
+}

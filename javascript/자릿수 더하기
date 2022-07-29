@@ -1,7 +1,0 @@
-function solution(n) {
-    let numArray = String(n).split('');
-    let answer = numArray.reduce((acc, cur) => {
-        return Number(acc) + Number(cur)
-    })
-    return Number(answer)
-}

@@ -1,0 +1,9 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12947?language=javascript
+function solution(x) {
+    let newArray = String(x).split("");
+    let sumResult = newArray.reduce((acc,cur) => {
+        return Number(acc) + Number(cur);
+    })
+    let answer = x%sumResult === 0 ? true : false;
+    return answer;
+}
