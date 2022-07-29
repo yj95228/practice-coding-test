@@ -1,0 +1,31 @@
+//https://school.programmers.co.kr/learn/courses/30/lessons/92341?language=javascript
+function timediff(time1, time2){
+    const [times1, times2] = [time1.split(':').map(Number), time2.split(':').map(Number)]
+    const [minute1, minute2] = [times1[0]*60+times1[1], times2[0]*60+times2[1]]
+    return minute2 - minute1
+}
+function solution(fees, records) {
+    const answer = [];
+    const recordsArray = records.map(record => record.split(' '))
+    const carNumbers = recordsArray.map(record => record[1])
+    const recordObj = {}
+    for(const car of [...new Set(carNumbers)]){
+        recordObj[car] = []
+    }
+    for(const record of recordsArray){
+        recordObj[record[1]].push(record[0])
+    }
+    const recordSort = Object.keys(recordObj).sort();
+    for(const record of recordSort){
+        const recordArray = recordObj[record];
+        if(recordArray.length % 2 === 1) recordArray.push('23:59')
+        recordArray.push(0)
+        for(let i = 0; i < recordArray.length-1; i += 2){
+            recordArray[recordArray.length-1] += timediff(recordArray[i], recordArray[i+1])
+        }
+        const minutes = recordArray[recordArray.length-1]
+        const fee = minutes <= fees[0] ? fees[1] : fees[1]+Math.ceil((minutes-fees[0])/fees[2])*fees[3]
+        answer.push(fee)
+    }
+    return answer;
+}
