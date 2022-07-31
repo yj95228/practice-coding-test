@@ -1,0 +1,13 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/68645?language=javascript
+function solution(n) {
+    const answer = []
+    for(let i = 1; i <= n; i++) answer.push(new Array(i).fill(0))
+    let num = 0, x = -1, y = 0, snail = n;
+    while(num < n*(n+1)/2){
+        for(let i = 0; i < snail; i++) answer[++x][y] = ++num
+        for(let i = 0; i < snail-1; i++) answer[x][++y] = ++num
+        for(let i = 0; i < snail-2; i++) answer[--x][--y] = ++num
+        snail -= 3;
+    }
+    return answer.flat();
+}
