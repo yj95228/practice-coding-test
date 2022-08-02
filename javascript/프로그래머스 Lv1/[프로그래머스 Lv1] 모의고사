@@ -9,8 +9,6 @@ function solution(answers) {
          .reduce((a,b) => a+b)
     )
     const bestScore = Math.max(supoja1, supoja2, supoja3)
-    return [supoja1, supoja2, supoja3].reduce((a,c,i) => {
-        if(c === bestScore) a.push(i+1)
-        return a
-    }, []);
+    return [supoja1, supoja2, supoja3]
+        .reduce((a,c,i) => (c === bestScore ? [...a, i+1] : a), []);
 }
