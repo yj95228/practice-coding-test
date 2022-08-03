@@ -1,0 +1,13 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12911?language=javascript
+function solution(n) {
+    let answer = n;
+    while(1){
+        answer++
+        if(answer.toString(2).match(/1/g).length === n.toString(2).match(/1/g).length) return answer
+    }
+}
+
+// 다른 분의 멋진 풀이 -> 재귀
+function solution(n,a=n+1) {
+    return n.toString(2).match(/1/g).length == a.toString(2).match(/1/g).length ? a : solution(n,a+1);
+}
