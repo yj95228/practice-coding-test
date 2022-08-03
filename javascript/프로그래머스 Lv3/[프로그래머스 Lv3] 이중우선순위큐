@@ -1,0 +1,11 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/42628?language=javascript
+function solution(operations) {
+    const answer = operations
+        .map(x => x.split(' '))
+        .reduce((a,c) => {
+            if(c[0] === 'I') return [...a, Number(c[1])]
+            if(c[0] === 'D' && c[1][0] === '-') return a.filter(x => x !== Math.min(...a))
+            else return a.filter(x => x !== Math.max(...a))
+        }, [])
+    return answer.length ? [Math.max(...answer), Math.min(...answer)] : [0,0];
+}
