@@ -1,0 +1,4 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/1845?language=javascript
+function solution(nums) {
+    return Math.min(parseInt(nums.length/2), [...new Set(nums)].length);
+}
