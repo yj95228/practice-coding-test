@@ -1,0 +1,17 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/118666?language=javascript
+
+function solution(survey, choices) {
+    let answer = '';
+    const MBTI = ['R','T','C','F','J','M','A','N'];
+    const score = MBTI.reduce((a,b) => {a[b] = 0; return a}, {})
+    choices.forEach((choice,i) => {
+        if(choice < 4) score[survey[i][0]] += 4-choice
+        else if(choice > 4) score[survey[i][1]] += choice-4
+    })
+    for(let i = 0; i < MBTI.length; i += 2){
+        if(score[MBTI[i]] > score[MBTI[i+1]]) answer += MBTI[i]
+        else if(score[MBTI[i]] < score[MBTI[i+1]]) answer += MBTI[i+1]
+        else answer += [MBTI[i], MBTI[i+1]].sort()[0]
+    }
+    return answer;
+}
