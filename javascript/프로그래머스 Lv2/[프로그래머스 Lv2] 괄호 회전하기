@@ -1,0 +1,33 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/76502?language=javascript#
+function solution(s) {
+    let answer = 0
+    for(let i = 0; i < s.length; i++){
+        const newString = `${s.slice(i)}${s.slice(0,i)}`
+        let stack = [], idx = -1
+        for(let j = 0; j < newString.length; j++){
+            if(newString[j] === ']'){
+                if(stack[stack.length-1] === '['){
+                    stack = stack.slice(0, stack.length-1)
+                }else{
+                    break;
+                }
+            }else if(newString[j] === '}'){
+                if(stack[stack.length-1] === '{'){
+                    stack = stack.slice(0, stack.length-1)
+                }else{
+                    break;
+                }
+            }else if(newString[j] === ')'){
+                if(stack[stack.length-1] === '('){
+                    stack = stack.slice(0, stack.length-1)
+                }else{
+                    break;
+                }
+            }else{
+                stack.push(newString[j])
+            }
+            if(j === newString.length-1 && stack.length === 0) answer++
+        }
+    }
+    return answer
+}
