@@ -1,0 +1,10 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/70129
+function solution(s) {
+    let first = 0, second = 0
+    while(s !== '1'){
+        first++
+        second += s.split('').filter(x => x === '0').length 
+        s = s.replace(/0/g,'').length.toString(2)
+    }
+    return [first, second];
+}
