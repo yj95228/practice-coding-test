@@ -1,0 +1,17 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/92335
+
+function isPrime(n){
+    if(n < 2) return false
+    if(n === 2) return true
+    for(let x = 2; x < Math.sqrt(n)+1; x++){
+        if(n%x === 0) return false
+    }
+    return true
+}
+
+function solution(n, k) {
+    return n.toString(k)
+            .split('0')
+            .map(Number)
+            .reduce((sum, n) => isPrime(n) ? ++sum : sum, 0)
+}
