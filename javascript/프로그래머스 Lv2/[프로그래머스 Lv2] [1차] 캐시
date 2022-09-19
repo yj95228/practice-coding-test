@@ -1,0 +1,17 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/17680
+function solution(cacheSize, cities) {
+    let answer = 0
+    cities.reduce((cache, city) => {
+        let cityName = city.toUpperCase()
+        if(cache.includes(cityName)) {
+            answer++
+            cache = cacheSize ? [...cache.filter(x => x !== cityName), cityName] : []
+        }
+        else {
+            answer += 5
+            cache = cacheSize ? [...cache.slice(1), cityName] : []
+        }
+        return cache
+    }, new Array(cacheSize))
+    return answer;
+}
