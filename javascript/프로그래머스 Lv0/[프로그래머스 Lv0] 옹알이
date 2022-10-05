@@ -1,0 +1,8 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/120956?language=javascript
+function solution(babbling) {
+    const re1 = /(aya|ye|woo|ma)\1+/
+    const re2 = /^(aya|ye|woo|ma)+$/
+    return babbling.reduce((answer, word) => (
+        !re1.test(word) && re2.test(word) ? ++answer : answer
+    ), 0)
+}
