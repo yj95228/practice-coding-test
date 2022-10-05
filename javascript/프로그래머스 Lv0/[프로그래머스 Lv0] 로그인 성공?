@@ -1,0 +1,14 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/120883
+function solution(id_pw, db) {
+    let answer = '';
+    for(let db_idpw of db){
+        if(db_idpw[0] === id_pw[0])
+            if(db_idpw[1] === id_pw[1]){
+                answer = 'login'
+                break
+            }
+            else answer = 'wrong pw'
+        else answer = answer === 'wrong pw' ? answer : 'fail'
+    }
+    return answer;
+}
