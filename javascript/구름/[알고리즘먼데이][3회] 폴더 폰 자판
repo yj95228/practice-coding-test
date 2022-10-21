@@ -1,0 +1,38 @@
+// https://level.goorm.io/exam/159769/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EB%A8%BC%EB%8D%B0%EC%9D%B4-3%ED%9A%8C/quiz/2
+const readline = require('readline');
+
+(async () => {
+	let rl = readline.createInterface({ input: process.stdin });
+	const data = []
+	for await (const line of rl) {
+		data.push(line)
+	}
+	button = [[1,'.',',','?','!'],
+						[2,'A','B','C'],
+						[3,'D','E','F'],
+						[4,'G','H','I'],
+						[5,'J','K','L'],
+						[6,'M','N','O'],
+						[7,'P','Q','R','S'],
+						[8,'T','U','V'],
+						[9,'W','X','Y','Z']]
+	arr = data[1].split('').reduce((a,b) => {
+		c = a.at(-1)
+		if(c){
+			if(c.at(-1) === b){
+				a[a.length-1] = `${a.at(-1)}${b}`
+			}else{
+				a.push(b)
+			}
+		}else{
+			a.push(b)
+		}
+		return a
+	}, [])
+	console.log(arr.map((x) => {
+		a = x.at(-1)
+		b = x.length
+		return button[a-1][(b-1)%button[a-1].length]
+	}).join(''))
+	process.exit();
+})();
