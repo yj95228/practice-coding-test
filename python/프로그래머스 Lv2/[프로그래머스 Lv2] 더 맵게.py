@@ -1,4 +1,4 @@
-// https://school.programmers.co.kr/learn/courses/30/lessons/42626?language=python3
+# https://school.programmers.co.kr/learn/courses/30/lessons/42626?language=python3
 
 import heapq
 from heapq import heappop, heappush
