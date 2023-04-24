@@ -26,3 +26,14 @@ function solution(participant, completion) {
     })
     return Object.keys(obj).filter(player => obj[player] > 0).toString('');
 }
+
+// 세번째 시도 : 간결하게 코드 리팩토링
+function solution(participant, completion) {
+    const obj = completion.reduce((obj, t)=> (obj[t] = obj[t] ? obj[t]+1 : 1 , obj), {})
+    return participant.find(t => {
+        if(obj[t])
+            obj[t] = obj[t]-1
+        else 
+            return true
+    })
+}

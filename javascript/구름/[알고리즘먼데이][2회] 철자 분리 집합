@@ -1,0 +1,14 @@
+// https://edu.goorm.io/exam/158413/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%EB%A8%BC%EB%8D%B0%EC%9D%B4-2%ED%9A%8C/quiz/2
+const readline = require('readline');
+
+(async () => {
+	let rl = readline.createInterface({ input: process.stdin });
+	const data = []
+	
+	for await (const line of rl) {
+		data.push(line)
+	}
+	
+	console.log(data[1].split('').reduce((acc, cur, idx, src) => (cur === src[idx-1] ? acc : ++acc), 0))
+	process.exit();
+})();

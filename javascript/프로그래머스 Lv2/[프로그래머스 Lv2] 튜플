@@ -1,0 +1,17 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/64065?language=javascript
+
+function solution(s) {
+    const answer = [];
+    const obj = s.replace(/[^\d,]/g,'')
+        .split(',')
+        .reduce((obj, t)=> (obj[t] = obj[t] ? obj[t]+1 : 1 , obj), {})
+        
+    const getKeyByValue = (object, value) => {
+      return Object.keys(object).find(key => object[key] === value)
+    }
+    
+    Object.values(obj)
+        .sort((a,b) => b-a)
+        .forEach(v => answer.push(Number(getKeyByValue(obj, v))))
+    return answer
+}

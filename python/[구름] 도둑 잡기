@@ -1,0 +1,13 @@
+user_input = input()
+list = user_input.split(' ')
+dict = {}
+
+for i in list:
+  if i in dict:
+    dict[i] += 1
+  else:
+    dict[i] = 1
+    
+for i in dict:
+  if dict[i] == 1:
+    print(i)

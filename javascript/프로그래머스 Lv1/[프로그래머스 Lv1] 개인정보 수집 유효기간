@@ -1,0 +1,27 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/150370
+function solution(today, terms, privacies) {
+    const termsObj = terms.reduce((obj,term) => {
+        const [key, value] = term.split(' ')
+        obj[key] = Number(value)
+        return obj
+    }, {})
+    const privaciesArr = privacies.map(privacy => {
+        const [dates, term] = privacy.split(' ')
+        let [YYYY, MM, DD] = dates.split('.').map(Number)
+        MM += termsObj[term]
+        YYYY += parseInt((MM-1)/12)
+        if(MM%12 === 0){
+            MM = 12
+        }else if(MM%12 < 10){
+            MM = `0${MM%12}`
+        }else {
+            MM = MM%12
+        }
+        if(DD < 10) DD = `0${DD}`
+        return Number(`${YYYY}${MM}${DD}`)
+    })
+    today = Number(today.split('.').join(''))
+    return privaciesArr.reduce((arr, privacy, idx) => {
+        return privacy <= today ? [...arr, idx+1] : arr
+    }, [])
+}

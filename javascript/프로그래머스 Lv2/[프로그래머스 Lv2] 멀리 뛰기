@@ -1,0 +1,15 @@
+// https://school.programmers.co.kr/learn/courses/30/lessons/12914?language=javascript
+function solution(n) {
+    if(n <= 3) return n
+    const fibNums = [1,1,2,3]
+    for(let i = 4; i <= n; i++){
+        fibNums[i] = (fibNums[i-1] + fibNums[i-2]) % 1234567
+    }
+    return fibNums[n]
+}
+// 1 -> 1
+// 2 -> 2
+// 3 -> 3
+// 4 -> 5
+// 5 -> (1,1,1,1,1), (2,1,1,1)*4, (2,2,1)*3 = 8
+// 6 -> (1,1,1,1,1,1), (2,1,1,1,1)*5, (2,2,1,1)*6, (2,2,2) = 13

@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+# UTF-8 encoding when using korean
+user_input = input()
+[N, M] = user_input.split(' ')
+answer = int(N)
+reserve = []
+for i in range(int(M)):
+	[x, y] = input().split(' ')
+	if x == 'deposit':
+		answer += int(y)
+		if len(reserve):
+			if answer >= reserve[0]:
+				k = reserve.pop(-1)
+				answer -= k
+	else:
+		if answer >= int(y):
+			answer -= int(y)
+		else:
+			if x == 'reservation':
+				reserve.append(int(y))
+			
+print (answer)
