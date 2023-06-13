@@ -1,0 +1,16 @@
+/**
+ * @param {number} n
+ * @return {number[][]}
+ */
+var generateMatrix = function(n) {
+    const answer = Array.from(Array(n), () => new Array(n))
+    let num = 0, x = 0, y = -1, snail = n;
+    while(num < Math.pow(n,2)){
+        for(let i = 0; i < snail; i++) answer[x][++y] = ++num
+        for(let i = 0; i < snail-1; i++) answer[++x][y] = ++num
+        for(let i = 0; i < snail-1; i++) answer[x][--y] = ++num
+        for(let i = 0; i < snail-2; i++) answer[--x][y] = ++num
+        snail -= 2;
+    }
+    return answer
+};
