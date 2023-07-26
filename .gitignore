@@ -1,1 +1,3 @@
-python/백준/*.txt
+python/*/*.txt
+python/*/main.py
+.idea
