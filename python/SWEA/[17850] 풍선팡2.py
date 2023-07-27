@@ -53,3 +53,21 @@ for tc in range(1, T+1):
                     sm += arr[r+dx][c+dy]
             answer = max(answer, sm)
     print(f'#{tc} {answer}')
+
+# 네번째 풀이
+def check(matrix, r, c):
+    result = 0
+    for dx, dy in ((0,0),(1,0),(0,1),(-1,0),(0,-1)):
+        if 0 <= r+dx < len(matrix) and 0 <= c+dy < len(matrix[0]):
+            result += matrix[r+dx][c+dy]
+    return result
+
+T = int(input())
+for tc in range(1, T + 1):
+    N, M = map(int, input().split())
+    matrix = [list(map(int, input().split())) for _ in range(N)]
+    answer = 0
+    for r in range(N):
+        for c in range(M):
+            answer = max(answer, check(matrix, r, c))
+    print(f'#{tc} {answer}')
