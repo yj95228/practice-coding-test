@@ -3,10 +3,6 @@ import sys
 sys.stdin = open("input.txt", "rt")
 
 def check(matrix, r, c, N, M):
-    # if N != len(matrix):
-    #     print("NO1")
-    # if M != len(matrix[0]):
-    #     print("NO2")
     result = matrix[r][c]
     for mul in range(1, matrix[r][c]+1): # result를 넣으면 값이 계속 변하니까 matrix[r][c]와 같이 변하지 않는 값으로
         for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
