@@ -19,3 +19,18 @@ for r in range(N-8+1):
     for c in range(M-8+1):
         answer = min(answer, sum([sum(row[c:c+8]) for row in arrB[r:r+8]]), sum([sum(row[c:c+8]) for row in arrW[r:r+8]]))
 print(answer)
+
+# 두번째 풀이
+min_b, min_w = 64, 64
+for r in range(N-8+1):
+    for c in range(M-8+1):
+        b, w = 0, 0
+        for i in range(8):
+            for j in range(8):
+                if (i+j)%2 == 0 and matrix[r+i][c+j] != 'W': w += 1
+                elif (i+j)%2 == 0 and matrix[r+i][c+j] != 'B': b += 1
+                elif (i+j)%2 == 1 and matrix[r+i][c+j] != 'B': w += 1
+                elif (i+j)%2 == 1 and matrix[r+i][c+j] != 'W': b += 1
+        min_b = min(min_b, b)
+        min_w = min(min_w, w)
+print(min(min_b, min_w))
