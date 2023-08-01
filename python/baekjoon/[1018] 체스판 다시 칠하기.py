@@ -34,3 +34,28 @@ for r in range(N-8+1):
         min_b = min(min_b, b)
         min_w = min(min_w, w)
 print(min(min_b, min_w))
+
+# 강사님 코드
+def get_repaint_cnt(sr,sc,rect_map):
+    w_cnt, b_cnt, cell = 0, 0, 0
+    for r in range(sr, sr+8):
+        for c in range(sc, sc+8):
+            if rect_map[r][c] != cell:
+                w_cnt += 1
+            elif rect_map[r][c] != cell ^ 1:
+                b_cnt += 1
+            if c < sc+8-1: cell ^= 1
+    return min(w_cnt, b_cnt)
+
+def solve(rect_map,n,m):
+    min_result = n*m
+    for r in range(n-8+1):
+        for c in range(m-8+1):
+            cnt = get_repaint_cnt(r,c,rect_map)
+            if min_result > cnt: min_result = cnt
+    return min_result
+n, m = map(int, input().rstrip().split())
+rect_map = [None]*n
+for i in range(n):
+    rect_map[i] = [0 if c == 'W' else 1 for c in list(input().rstrip())]
+print(solve(rect_map,n,m))

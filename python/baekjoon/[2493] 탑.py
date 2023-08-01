@@ -16,3 +16,12 @@ for i in range(N):
             break
     stack.append(i)
 print(*answer)
+
+# 다시 풀기
+for i, x in enumerate(arr):
+    # 나보다 작은 탑은 가려짐
+    while stack and x > arr[stack[-1]]:
+        stack.pop()
+    if stack: answer[i] = stack[-1]+1
+    stack.append(i)
+print(*answer)
