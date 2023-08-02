@@ -40,3 +40,58 @@ for tc in range(1,T+1):
     print(f'#{tc}', end=' ')
     for m in game_map:
         print(''.join(m))
+
+# 강사님 코드
+dr = (-1,1,0,0)
+dc = (0,0,-1,1)
+dir_map = {'U':0,'D':1,'L':2,'R':3}
+
+def solve():
+    for c in commands:
+        if c == 'S': shoot()
+        else: move(dir_map[c])
+
+    temp = {0:'^',1:'v',2:'<',3:'>'}
+    game_map[tank_dir][tank_c] = temp[tank_dir]
+
+    print(f'#{tc}', end='')
+    for line in game_map: print(''.join(line))
+
+def shoot():
+    nr, nc = tank_r, tank_c
+    while True:
+        nr += dr[tank_dir]
+        nc += dc[tank_dir]
+        if nr < 0 or nr >= H or nc < 0 or nc >= W or game_map[nr][nc] == '#': break
+        elif game_map[nr][nc] == '*':
+            game_map[nr][nc] = '.'
+            break
+
+def move(dir):
+    global tank_dir, tank_r, tank_c
+    tank_dir = dir
+    nr = tank_r + dr[tank_dir]
+    nc = tank_c + dc[tank_dir]
+    if 0 <= nr < H and 0 <= nc < W and game_map[nr][nc] == '.':
+        tank_r, tank_c = nr, nc
+
+TC = int(input())
+for tc in range(1,TC+1):
+    shape_map = {'^':0,'v':1,'<':2,'>':3}
+    H,W = map(int, input().split())
+    game_map = [list(input()) for _ in range(H)]
+
+    tank_r, tank_c = -1, -1
+    for r in range(H):
+        for c in range(W):
+            if game_map[r][c] in ('<','>','v','^'):
+                tank_r, tank_c = r, c
+                tank_dir = shape_map[game_map[r][c]]
+                game_map[r][c] = '.'
+                break
+        if tank_r != -1: break
+
+    cnt_command = int(input())
+    commands = input()
+
+    solve()

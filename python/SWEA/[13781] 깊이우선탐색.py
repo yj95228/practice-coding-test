@@ -58,3 +58,20 @@ for tc in range(1,T+1):
 #             else:
 #                 break
 #     print(f'#{tc}', *answer)
+
+# 재귀로 풀기
+def dfs(current):
+    # [1] 방문 표시, 첫 방문 시 해야할 일
+    visited[current] = True
+    answer.append(current)
+    # [2] 연결된 4/8 방향 등 반복 처리
+    # 범위 이내, 미방문 시, ** 조건에 맞으면 방문(dfs호출)
+    for x in graph[current]:
+        if not visited[x]:  # 방문하지 않은 경우
+            dfs(x)
+
+
+visited = [0]*(V+1)
+answer = []
+dfs(1)  # 첫 위치만 방문, main 루프에서는 가장 위 한번만 호출
+print(f'#{tc}', *answer)
