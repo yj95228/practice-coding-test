@@ -8,6 +8,20 @@ def dfs(r, c):
         not visited[r+dx][c+dy] and matrix[r+dx][c+dy] >= x:
             dfs(r+dx, c+dy)
 
+    # 메모리 부족 시 활용 -> 시간은 늘어남
+    # ni = ci - 1
+    # if 0 <= ni and v[ni][cj] == 0 and arr[ni][cj] > h:
+    #     dfs(ni, cj, h)  # 상
+    # ni = ci + 1
+    # if ni < N and v[ni][cj] == 0 and arr[ni][cj] > h:
+    #     dfs(ni, cj, h)  # 하
+    # nj = cj - 1
+    # if 0 <= nj and v[ci][nj] == 0 and arr[ci][nj] > h:
+    #     dfs(ci, nj, h)  # 좌
+    # nj = cj + 1
+    # if nj < N and v[ci][nj] == 0 and arr[ci][nj] > h:
+    #     dfs(ci, nj, h)  # 우
+
 sys.stdin = open('input.txt','rt')
 sys.setrecursionlimit(100000)
 input = sys.stdin.readline
