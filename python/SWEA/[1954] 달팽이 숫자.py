@@ -27,3 +27,24 @@ for tc in range(1,T+1):
     print(f'#{tc}')
     for m in matrix:
         print(*m)
+
+# 두번째 풀이
+def dfs(r,c,num,d):
+    if num > N*N: return
+    matrix[r][c] = num
+    if 0 <= r+dx[d] < N and 0 <= c+dy[d] < N\
+    and matrix[r+dx[d]][c+dy[d]] == 0:
+        dfs(r+dx[d], c+dy[d], num+1, d)
+    else:
+        dfs(r+dx[(d+1)%4], c+dy[(d+1)%4], num+1, (d+1)%4)
+
+T = int(input())
+for tc in range(1, T + 1):
+    N = int(input())
+    matrix = [[0]*N for _ in range(N)]
+    dx = (0,1,0,-1)
+    dy = (1,0,-1,0)
+    dfs(0,0,1,0)
+    print(f'#{tc}')
+    for m in matrix:
+        print(*m)
