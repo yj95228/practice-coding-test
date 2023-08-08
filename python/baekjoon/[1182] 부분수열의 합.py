@@ -17,3 +17,13 @@ lst = list(map(int, input().split()))
 answer = 0
 dfs([])
 print(answer)
+
+# 강사님 코드
+def dfs(n, sm, cnt):
+    global answer
+    if n == N:
+        if sm == S and cnt > 0:
+            answer += 1
+            return
+    dfs(n+1, sm, cnt)   # 포함X
+    dfs(n+1, sm+lst[n], cnt+1)   # 포함O
