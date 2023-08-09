@@ -1,4 +1,5 @@
 # https://swexpertacademy.com/main/talk/solvingClub/problemView.do?solveclubId=AYmCPbwakowDFAUe&contestProbId=AYnI6Ju6FF0DFAUe&probBoxId=AYnNE126270DFARi&type=USER&problemBoxTitle=11_230807%3A+Backtracking_1&problemBoxCnt=11
+# N개 중 M개 조합
 import sys
 sys.stdin = open('input.txt', 'r')
 

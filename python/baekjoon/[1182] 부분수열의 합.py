@@ -1,4 +1,5 @@
 # https://www.acmicpc.net/problem/1182
+# N개 중 0~N개 조합 모든 경우 (부분집합, powerset)
 import sys
 
 def dfs(arr):
@@ -27,3 +28,13 @@ def dfs(n, sm, cnt):
             return
     dfs(n+1, sm, cnt)   # 포함X
     dfs(n+1, sm+lst[n], cnt+1)   # 포함O
+
+# 비트마스킹
+answer = 0
+for bits in range(1, 2**N): # 1 << N
+    sm = 0
+    for pos in range(N):
+        if bits & (1<<pos):
+            sm += lst[pos]
+    if sm == S: answer += 1
+print(answer)

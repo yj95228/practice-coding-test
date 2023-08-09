@@ -16,3 +16,18 @@ lst = [input().strip() for _ in range(N)]
 s = set()
 dfs([], [])
 print(len(s))
+
+# 두번째 풀이
+def dfs(arr, result):
+    if len(arr) == K:
+        s.add(result)
+    else:
+        for i,x in enumerate(lst):
+            if not arr or i not in arr:
+                dfs(arr+[i], result+x)
+N = int(input())
+K = int(input())
+lst = [input().strip() for _ in range(N)]
+s = set()
+dfs([], '')
+print(len(s))

@@ -1,4 +1,5 @@
-# https://swexpertacademy.com/main/talk/solvingClub/problemView.do?solveclubId=AYmCPbwakowDFAUe&contestProbId=AX7wkzAKSpEDFARO&probBoxId=AYnSX2OKO2YDFARi&type=USER&problemBoxTitle=12_230808%3A+Backtracking_2&problemBoxCnt=4
+# https://swexpertacademy.com/main/talk/solvingClub/problemView.do?solveclubId=AYmCPbwakowDFAUe&contestProbId=AX9KIrOqJcUDFAQe&probBoxId=AYnSX2OKO2YDFARi&type=USER&problemBoxTitle=12_230808%3A+Backtracking_2&problemBoxCnt=4
+# N개 중 N개 순열
 import sys
 sys.stdin = open('input.txt', 'r')
 
@@ -27,17 +28,17 @@ def dfs(n, sm):
     if n == N:
         answer = min(answer, sm)
         return
-    for i in range(N):
-        if not v[i]:
-            v[i] = True
-            dfs(n+1, sm+matrix[n][i])
-            v[i] = False
+    for j in range(N):
+        if not visited[j]:
+            visited[j] = True
+            dfs(n+1, sm+matrix[n][j])
+            visited[j] = False
 
 T = int(input())
 for tc in range(1, T + 1):
     N = int(input())
     matrix = [list(map(int, input().split())) for _ in range(N)]
     answer = 15 * 15 * 99
-    v = [0]*N
+    visited = [0]*N
     dfs(0, 0)
     print(f'#{tc} {answer}')

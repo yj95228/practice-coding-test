@@ -1,4 +1,5 @@
 # https://swexpertacademy.com/main/talk/solvingClub/problemView.do?solveclubId=AYmCPbwakowDFAUe&contestProbId=AX7wkzAKSpEDFARO&probBoxId=AYnSX2OKO2YDFARi&type=USER&problemBoxTitle=12_230808%3A+Backtracking_2&problemBoxCnt=4
+# 12개 중 N개 고르는 조합
 import sys
 sys.stdin = open('input.txt', 'r')
 

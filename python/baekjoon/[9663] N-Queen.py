@@ -21,3 +21,25 @@ N = int(input())
 answer = 0
 dfs([])
 print(answer)
+
+# 강사님 코드
+def dfs(n):
+    global ans
+    if n == N:
+        ans += 1
+        return
+
+    for j in range(N):
+        if not v1[j] and not v2[n+j] and not v3[n-j]:
+            v1[j], v2[n+j], v3[n-j] = True, True, True
+            dfs(n+1)
+            v1[j], v2[n+j], v3[n-j] = False, False, False
+
+N = int(input())
+v1 = [False]*N
+v2 = [False]*2*N
+v3 = [False]*2*N
+
+ans = 0
+dfs(0)
+print(ans)
