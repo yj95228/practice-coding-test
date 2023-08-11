@@ -1,3 +1,4 @@
+# TODO: 정렬 공부
 # https://www.acmicpc.net/problem/2750
 import sys
 sys.stdin = open('input.txt','r')

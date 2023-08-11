@@ -3,7 +3,7 @@
 import sys
 sys.stdin = open('input.txt', 'r')
 
-def combinations(r, sm, arr):
+def permutation(r, sm, arr):
     global answer
     if r == N:
         if sm < answer: answer = sm
@@ -12,7 +12,7 @@ def combinations(r, sm, arr):
         if sm < answer:
             for i in range(N):
                 if i not in arr:
-                    combinations(r+1, sm+matrix[r][i], arr+[i])
+                    permutation(r+1, sm+matrix[r][i], arr+[i])
 
 
 T = int(input())

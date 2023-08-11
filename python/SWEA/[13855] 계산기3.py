@@ -49,3 +49,37 @@ for tc in range(1,11):
             elif x == '*':
                 stack.append(A * B)
     print(f'#{tc} {stack.pop()}')
+
+# 서용님 코드
+priority = {'*': 2, '+': 1, ')': 3, '(': 0}
+for tc in range(1, 11):
+    N = int(input())
+    F = input()
+    equation = ''
+    stack = []
+    for f in F:
+        if f.isdigit():
+            equation += f
+        elif f == '(':
+            stack.append(f)
+        elif f == ')':
+            while stack and stack[-1] != '(':
+                equation += stack.pop()
+            stack.pop()
+        else:
+            while stack and priority[f] <= priority[stack[-1]]:
+                equation += stack.pop()
+            stack.append(f)
+    while stack:
+        equation += stack.pop()
+
+    for e in equation:
+        if e.isdigit():
+            stack.append(int(e))
+        elif len(stack) > 1:
+            A, B = stack.pop(), stack.pop()
+            if e == '+':
+                stack.append(A + B)
+            elif e == '*':
+                stack.append(A * B)
+    print(f'#{tc} {stack[-1]}')
