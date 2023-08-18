@@ -1,3 +1,5 @@
+# TODO: BFS말고 그냥 완전탐색으로 풀어보기
+# https://www.acmicpc.net/problem/3987
 import sys
 input = sys.stdin.readline
 
