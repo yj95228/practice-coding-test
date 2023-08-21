@@ -2,60 +2,28 @@
 import sys
 sys.stdin = open('input.txt', 'r')
 
-def bfs(x,y,num):
-    queue = [(x,y)]
+def bfs(R,C):
+    visited = [[False]*M for _ in range(N)]
+    visited[R][C] = True
+    queue = [(R,C,1)]
     while queue:
-        r, c = queue.pop(0)
-        matrix[r][c] = num
+        r,c,d = queue.pop(0)
         for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
             if 0 <= r+dx < N and 0 <= c+dy < M and\
             not visited[r+dx][c+dy] and matrix[r+dx][c+dy]:
                 visited[r+dx][c+dy] = True
-                queue.append((r+dx,c+dy))
+                print(r+dx, c+dy, d)
+                queue.append((r+dx,c+dy,d+1))
+    return (R,C,d)
 
-def dijkstra(x,y,num):
-    visited = [[False]*M for _ in range(N)]
-    queue = [(0,x,y)]
-    visited[x][y] = True
-    while queue:
-        weight, r, c = queue.pop(0)
-        if matrix[r][c]:
-            distance[num][matrix[r][c]-1] = min(weight, distance[num][matrix[r][c]-1])
-            distance[matrix[r][c]][num-1] = min(weight, distance[matrix[r][c]][num-1])
-        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
-            if 0 <= r+dx < N and 0 <= c+dy < M and not visited[r+dx][c+dy]:
-                visited[r+dx][c+dy] = True
-                if matrix[r+dx][c+dy] != num:
-                    queue.append((weight+1, r+dx,c+dy))
-                else: queue.append((weight, r+dx,c+dy))
-
-T = int(input())
-for tc in range(1,T+1):
+TC = int(input())
+for tc in range(1,TC+1):
     N, M = map(int, input().split())
     matrix = [list(map(int, input().split())) for _ in range(N)]
-    visited = [[False]*M for _ in range(N)]
-    num = 1
-    magma_list = []
-    for r in range(N):
-        for c in range(M):
-            if matrix[r][c] and not visited[r][c]:
-                magma_list.append((r,c,num))
-                bfs(r,c,num)
-                num += 1
-            visited[r][c] = True
-
-    distance = {x: [N*M]*(num-1) for x in range(1,num)}
-    for x in range(1,num):
-        distance[x][x-1] = 0
-
+    answer = []
     for r in range(N):
         for c in range(M):
             if matrix[r][c]:
-                dijkstra(r,c,matrix[r][c])
-
-    mx_idx, mx = 0, 0
-    for k, v in distance.items():
-        if mx < max(v):
-            mx = max(v)
-            mx_idx = k
-    print(f'#{tc} {magma_list[mx_idx-1][0]+1} {magma_list[mx_idx-1][1]+1}')
+                answer.append(bfs(r,c))
+    answer.sort(key=lambda x: (-x[2], x[0]+x[1], x[0]))
+    print(f'#{tc} {answer[0][0]+1} {answer[0][1]+1}')
