@@ -10,10 +10,8 @@ for _ in range(K):
     x, y = map(int, input().split())
     matrix[x-1][y-1] = 1
 L = int(input())
-info = {}
-for _ in range(L):
-    cnt, dr = input().split()
-    info[int(cnt)] = dr
+arr = [input().split() for _ in range(L)]
+info = {int(n) : dr for n, dr in arr}
 answer, r, c, d = 0, 0, 0, 0
 snake = [(r,c)]
 direction = [(0,1),(1,0),(0,-1),(-1,0)]
