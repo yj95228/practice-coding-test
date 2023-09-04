@@ -38,3 +38,36 @@ while True:
         break
 
     answer += 1
+
+# 로봇을 idx를 저장하는 것이 아닌 컨베이어벨트 룩업테이블로 저장
+N, K = map(int, input().split())
+arr = list(map(int, input().split()))
+robot = [0]*N
+
+answer = 1
+cnt = 0
+while True:
+    # [1] 벨트가 각 칸 위에 있는 로봇과 함께 한 칸 회전한다.
+    arr = [arr[-1]] + arr[:-1]
+    robot = [0] + robot[:N-2] + [0]
+
+    # [2] 가장 먼저 벨트에 올라간 로봇부터, 벨트가 회전하는 방향으로 한 칸 이동할 수 있다면 이동
+    for i in range(N-2,0,-1):
+        if robot[i] == 1 and robot[i+1] == 0 and arr[i+1] >= 1:
+            robot[i], robot[i+1] = robot[i+1], robot[i]
+            arr[i+1] -= 1
+            if arr[i+1] == 0: cnt += 1
+    robot[N-1] = 0
+
+    # [3] 올리는 위치에 있는 칸의 내구도가 0이 아니면 올리는 위치에 로봇을 올린다.
+    if arr[0] > 0:
+        robot[0] = 1
+        arr[0] -= 1
+        if arr[0] == 0: cnt += 1
+
+    # [4] 내구도가 0인 칸의 개수가 K개 이상이라면 과정을 종료한다
+    if cnt >= K:
+        print(answer)
+        break
+
+    answer += 1

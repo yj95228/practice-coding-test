@@ -1,3 +1,4 @@
+# TODO: dfs(A팀, B팀)
 # https://www.acmicpc.net/problem/14889
 import sys
 sys.stdin = open('input.txt','r')
