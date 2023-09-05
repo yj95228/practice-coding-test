@@ -1,4 +1,5 @@
 # FIXME: 새로 감시하게 된 영역을 따로 저장하여 재귀 및 visited 배열 복구
+# 또는 visited += 1 복귀 시 visited -= 1 하는 방법
 # https://www.acmicpc.net/problem/15683
 import sys
 sys.stdin = open('input.txt','r')
