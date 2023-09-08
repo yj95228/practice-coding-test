@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+# TODO : 다시 풀어보기
+>>>>>>> 07f2565049530a9c86644c7cab0248236ce8d070
 # https://www.acmicpc.net/problem/13567
 import sys
 sys.stdin = open('input.txt','r')

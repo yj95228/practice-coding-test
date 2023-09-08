@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+# TODO: BFS말고 그냥 완전탐색으로 풀어보기
+# https://www.acmicpc.net/problem/3987
+>>>>>>> 07f2565049530a9c86644c7cab0248236ce8d070
 import sys
 input = sys.stdin.readline
 
