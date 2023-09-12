@@ -1,5 +1,6 @@
 # 1차 제출: 142764kb, 1480ms
 # 2차 제출: 다 깨지면 조기 종료 (1480ms -> 1432ms)
+# 3차 제출: 나머지를 다 깨도 최대값을 갱신할 수 없는 경우(if cnt + (N-n)*2 <= answer: return) 추가 (1432ms -> 708ms)
 # https://www.acmicpc.net/problem/16987
 import sys
 sys.stdin = open('input.txt', 'r')
@@ -10,6 +11,7 @@ def dfs(n, cnt):
     if cnt == N:
         answer = cnt
         return
+    if cnt + (N-n)*2 <= answer: return
     if n == N:
         answer = max(cnt, answer)
         return
