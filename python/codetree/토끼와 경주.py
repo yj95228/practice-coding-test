@@ -11,6 +11,9 @@
   - K번의 턴 동안 한번이라도 뽑혔던 적이 있던 토끼 중 가장 우선순위가 높은 토끼를 골라야만 함에 꼭 유의합니다
   - 제발 문제 쫌 읽자 (6719ms, 40MB)
 - 5차 제출: (16:36) heapify 필요없었어서 import 제거
+- 6차 제출: heappush할 때 리스트보다는 tuple로 넣는 게 더 좋음 (7012ms -> 6396ms)
+- 7차 제출: max()하니까 더 느려짐 (6396ms -> 6694ms)
+- 8차 제출: 점수 줄 토끼를 선정할 때 현재 서 있는 행과 열 기준으로 해야하는데 해당 반례가 없어서 수정 (6694ms -> 6296ms)
 '''
 from heapq import heappop, heappush
 
@@ -34,8 +37,8 @@ def run():
                 if ec < ny:
                     ec = ny
 
-    heappush(q1, [jump+1, er+ec, er, ec, best])
-    heappush(q2, [-(er+ec), -er, -ec, -best])
+    heappush(q1, (jump+1, er+ec, er, ec, best))
+    visited[best] = [(er+ec), er, ec, best]
 
     for who in rabbit:
         if who == best: continue
@@ -48,22 +51,22 @@ for _ in range(Q):
     # 경주 시작 준비
     if command[0] == 100:
         N, M, P, *rabbits = command[1:]
-        rabbit = dict()                 # rabbit: 토끼 정보
+        rabbit = dict()                      # rabbit: 토끼 정보
         q1 = []                         # q1: 멀리 보낼 토끼
         for i in range(0,2*P,2):
             pid, d = rabbits[i:i+2]
             rabbit[pid] = [d, 0]        # rabbit: 이동거리, 점수
-            heappush(q1, [0, 0, 0, 0, pid])  # q1: 점프 횟수 / 행+열 / 행 / 열 / 고유번호
+            heappush(q1, (0, 0, 0, 0, pid))  # q1: 점프 횟수 / 행+열 / 행 / 열 / 고유번호
 
     # 경주 진행
     elif command[0] == 200:
         K, S = command[1:]
-        q2 = []                         # q2: 점수 줄 토끼
+        visited = dict()                # visited: 점수 줄 토끼
         for _ in range(K): run()
 
         # q2: 행+열 / 행 / 열 / 고유번호
-        pid = q2[0][-1]
-        rabbit[-pid][-1] += S
+        pid = max(map(tuple, visited.values()))[-1]
+        rabbit[pid][-1] += S
 
     # 이동거리 변경
     elif command[0] == 300:
