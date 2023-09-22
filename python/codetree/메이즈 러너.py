@@ -22,9 +22,9 @@ matrix[er][ec] = -1
 
 for _ in range(1,K+1):
     new_matrix = [row[:] for row in matrix]
+
     # 모든 참가자는 한칸씩 움직인다
     # 출구까지의 최단 거리가 가까운 쪽으로 (상하로 움직이는 것을 우선)
-
     for who in range(M):
         r, c = runner[who]
         if (r,c) == (None, None): continue
@@ -58,7 +58,8 @@ for _ in range(1,K+1):
                 runner[who] = [r, c+1]
 
     if exit == 0: break
-    # 미로 회전
+
+    # 미로 회전 위한 가장 작은 정사각형 만들기
     flag, sr1, sc1, sr2, sc2 = False, None, None, None, None
     visited = [[False]*N for _ in range(N)]
     for i in range(1,N):
@@ -86,17 +87,21 @@ for _ in range(1,K+1):
             if flag: break
         if flag: break
 
+    # 배열 회전시킬 부분 뽑아서 rotate를 dictionary로 처리
     rotate = {(sr1+r, sc1+c): (sr1+c, sc2-r) for r in range(i+1) for c in range(i+1)}
+    
+    # 미로 회전시키기
     for k, v in rotate.items():
         r1, c1 = k
         r2, c2 = v
         if matrix[r1][c1] > 0:
             new_matrix[r2][c2] = matrix[r1][c1]-1
         else:
-            if matrix[r1][c1] == -1:
+            if matrix[r1][c1] == -1:    # 탈출구 회전시키기
                 er, ec = r2, c2
             new_matrix[r2][c2] = matrix[r1][c1]
 
+    # 모험가 회전시키기
     for m in range(len(runner)):
         r, c = runner[m]
         if (r,c) in rotate:
