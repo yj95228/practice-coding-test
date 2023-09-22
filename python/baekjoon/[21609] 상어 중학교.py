@@ -45,11 +45,8 @@ def dfs(x,y):
     for r, c in rainbow_list:
         groups[r][c] = 0
 
-
     if block >= 2:
         lst.append((block, rainbow, x, y))
-        return True
-    return False
 
 def down():
     for c in range(1,N+1):
