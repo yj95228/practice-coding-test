@@ -16,3 +16,15 @@ while K:
     answer += a
     K = b
 print(answer)
+
+# 8/11
+N, K = map(int, input().split())
+arr = sorted([int(input()) for _ in range(N)])
+answer = 0
+while K:
+    money = arr.pop()
+    if K >= money:
+        mok, namuji = divmod(K, money)
+        answer += mok
+        K = namuji
+print(answer)
