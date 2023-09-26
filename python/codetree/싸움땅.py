@@ -5,6 +5,11 @@
     -> 정해도 짜면서 계속 바뀌네...
     -> 미리 생각하는 힘이 부족한거 같음
 - 14:56 일단 제출 (109ms, 31MB)
+- 총을 격자에 여러 개 둘 수 있게 리스트로 했어야했는데 처음에 그냥 int로 시작함
+- 이긴 사람과 진 사람이 동시에 움직이는 데 해당 처리가 어려웠음
+- 가장 센 총을 가져와야 하므로 heapq를 쓰는 것이 바람직함 (sort는 O(nlogn), max, remove는 모두 O(n)임)
+- 진 사람이 총을 떨어뜨린 후 이긴 사람이 총을 주워야함
+- 방향 탐색할때 while문 말고 for문으로 4방향 탐색하기
 '''
 import sys
 sys.stdin = open('input.txt','r')
@@ -96,6 +101,5 @@ for _ in range(K):
                 if g: matrix[nx][ny].append(g)
             players[i][0], players[i][1] = nx, ny
             where[x][y], where[nx][ny] = where[nx][ny], where[x][y]
-
 
 print(*score)
