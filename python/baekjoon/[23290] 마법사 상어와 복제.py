@@ -7,6 +7,9 @@
 - 시간초과 날 거 같은데 어떻게 잡지
 - 16:36 시간초과 날거 같지만 일단 제출로 저장해놓고 수정하자
 - 16:44 코드가 더러워도 일단 제출 ㄱㄱㄱㄱㄱㄱㄱ
+- matrix = new_matrix 안 넣어서 변경이 제대로 안 됐음
+- filter를 쓰면 많이 느린 것 같다
+- 두 번 전 냄새이므로 3으로 해줘야함
 '''
 import sys
 sys.stdin = open('input.txt','r')
@@ -61,7 +64,7 @@ for _ in range(S):
         for dx, dy in ((-1,0),(0,-1),(1,0),(0,1)):
             nx, ny = x+dx, y+dy
             if 0 <= nx < 4 and 0 <= ny < 4:
-                arr = list(filter(lambda x: x >= 0, matrix2[nx][ny]))
+                arr = matrix2[nx][ny]
                 tmp = smells[nx][ny]
                 if arr:
                     smells[nx][ny] = 3

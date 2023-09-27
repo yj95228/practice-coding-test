@@ -1,3 +1,5 @@
+# dictionary in보다 get이 더 빠르다고 함
+# 딕셔너리에 (미생물 수, 방향, 최대 그룹의 미생물 수) 이렇게 저장하는 방법도 있음! (성진님 코드)
 # https://swexpertacademy.com/main/code/problem/problemDetail.do?contestProbId=AV597vbqAH0DFAVl
 T = int(input())
 dt = ((-1,0),(1,0),(0,-1),(0,1))
