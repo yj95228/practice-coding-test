@@ -4,8 +4,6 @@ sys.stdin = open('input.txt','r')
 
 def dijkstra(x):
     D = distance[x]
-    visited = [False]*(N+1)
-    visited[x] = True
     queue = [(0, x)]
     while queue:
         d, current = heappop(queue)
