@@ -1,8 +1,16 @@
+# 1차 제출: 성환님의 도움을 받아 제출 성공 (115316kb, 132ms)
+'''
+- 2차원 배열 복사가 아닌 3차원 배열 복사를 했어야 함
+    - [[x[:] for x in rows] for rows in new_matrix]
+- new_matrix[nx][ny] = None -> ~[0], ~[1] = -1, -1 / fish, d와 같이 수정
+'''
+# 2차 제출: new_matrix2로 만들지 않고 new_matrix 한번만 만들어도 됨
+# -1보다는 None이 더 pythonic한 방식이라고 생각되어서 코드 변경
 # https://www.acmicpc.net/problem/19236
 import sys
 input = sys.stdin.readline
 
-def recur(matrix, sr,sc,sd,result):
+def recur(matrix, sr, sc, sd, result):
     global answer
     answer = max(result, answer)
 
@@ -17,20 +25,17 @@ def recur(matrix, sr,sc,sd,result):
     dx, dy = dt[sd]
     for i in range(1,4):
         nx, ny = sr+i*dx, sc+i*dy
-        new_matrix2 = [[x[:] for x in rows] for rows in new_matrix]
         if not (0 <= nx < 4 and 0 <= ny < 4): break
-        elif new_matrix2[nx][ny][0] == -1: continue
+        elif not new_matrix[nx][ny][0]: continue
 
-        fish, d = new_matrix2[nx][ny]
+        fish, d = new_matrix[nx][ny]
         dead[fish] = True
-        new_matrix2[nx][ny][0], new_matrix2[nx][ny][1] = -1,-1
-        result += fish+1
+        new_matrix[nx][ny] = [None, None]
 
-        recur(new_matrix2, nx,ny,d,result)
+        recur(new_matrix, nx, ny, d, result+fish+1)
 
-        result -= fish+1
         dead[fish] = False
-        new_matrix2[nx][ny][0], new_matrix2[nx][ny][1] = fish, d
+        new_matrix[nx][ny] = [fish, d]
 
 
 def fish_move(matrix, fish, sr, sc):
@@ -71,7 +76,7 @@ if matrix[0][0]:
     dead[fish] = True
     sr, sc = 0, 0
     answer += fish+1
-    matrix[0][0] = [-1,-1]
+    matrix[0][0] = [None, None]
 
 # 물고기와 상어 이동
 recur(matrix, 0, 0, sd, answer)
