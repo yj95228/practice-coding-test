@@ -31,3 +31,33 @@ for r in range(100):
         if matrix[r][c] and matrix[r+1][c] and matrix[r][c+1] and matrix[r+1][c+1]:
             answer += 1
 print(answer)
+
+# 두번째 풀이
+N = int(input())
+matrix = [[0]*101 for _ in range(101)]
+dt = ((0,1),(-1,0),(0,-1),(1,0))        # dy,dx
+
+for _ in range(N):
+    X, Y, D, G = map(int, input().split())
+    stack = [(Y,X)]
+    matrix[Y][X] = 1
+    dy, dx = dt[D]
+    ny, nx = Y+dy, X+dx
+    stack.append((ny,nx))
+    matrix[ny][nx] = 1
+
+    for _ in range(G):
+        y, x = stack[-1]
+        dragon = []
+        for i in range(len(stack)-2,-1,-1):
+            b, a = stack[i]
+            dragon.append((y-x+a, x+y-b))
+            matrix[y-x+a][x+y-b] = 1
+        stack.extend(dragon)
+
+answer = 0
+for r in range(100):
+    for c in range(100):
+        if matrix[r][c] and matrix[r+1][c] and matrix[r][c+1] and matrix[r+1][c+1]:
+            answer += 1
+print(answer)

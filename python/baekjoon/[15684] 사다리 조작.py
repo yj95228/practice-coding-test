@@ -59,3 +59,47 @@ else:
     answer = 4
     recur(0, 0)
     print(-1 if answer == 4 else answer)
+
+
+# 두번째 풀이
+def play():
+    for c in range(N):
+        now = c
+        for r in range(H):
+            if now < N-1 and matrix[r][now] == 1:
+                now += 1
+            elif 0 <= now-1 and matrix[r][now-1] == 1:
+                now -= 1
+        if c != now: return False
+    return True
+
+def recur(n, start, cnt):
+    global answer
+
+    if n > 3 or cnt >= answer: return
+
+    if play():
+        answer = min(answer, cnt)
+        return
+    else:
+        for i in range(start, len(can_place)):
+            r, c = can_place[i]
+            if 0 <= c-1 and matrix[r][c-1] == 1: continue
+            matrix[r][c] = 1
+            recur(n+1, i+1, cnt+1)
+            matrix[r][c] = 0
+
+N, M, H = map(int, input().split())
+matrix = [[0]*(N-1) for _ in range(H)]
+can_place = [(r,c) for r in range(H) for c in range(N-1)]
+
+for _ in range(M):
+    a, b = map(lambda x: int(x)-1, input().split())
+    matrix[a][b] = 1
+    can_place.remove((a,b))
+    if 0 <= b-1 and (a,b-1) in can_place: can_place.remove((a,b-1))
+    if b+1 < N-1 and (a,b+1) in can_place: can_place.remove((a,b+1))
+
+answer = 4
+recur(0,0,0)
+print(-1 if answer == 4 else answer)

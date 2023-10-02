@@ -38,3 +38,29 @@ for x in command:
             r += 1
             dice = [dice[3], dice[0], dice[1], dice[2], dice[4], dice[5]]
             play()
+
+# 2차 풀이
+N, M, X, Y, K = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+arr = list(map(lambda x: int(x)-1, input().split()))
+dice = [0]*6
+dt = ((0,1),(0,-1),(-1,0),(1,0))
+turn = [
+    [3,1,0,5,4,2],
+    [2,1,5,0,4,3],
+    [4,0,2,3,5,1],
+    [1,5,2,3,0,4]
+]
+
+for k in range(K):
+    d = arr[k]
+    dx, dy = dt[d]
+    nx, ny = X+dx, Y+dy
+    if 0 <= nx < N and 0 <= ny < M:
+        dice = list(map(lambda x: dice[x], turn[d]))
+        if matrix[nx][ny] == 0:
+            matrix[nx][ny] = dice[-1]
+        else:
+            matrix[nx][ny], dice[-1] = 0, matrix[nx][ny]
+        print(dice[0])
+        X, Y = nx, ny

@@ -124,3 +124,145 @@ dt = ((1,0),(0,1),(-1,0),(0,-1))
 answer = 987654321
 recur(1, matrix, rx, ry, bx, by, 4)
 print(-1 if answer == 987654321 else answer)
+
+# 두번째 풀이
+'''
+- 재귀 돌릴 때 방문 복구 안 시킴
+- 또 구조화 못 시키고 반복문 씀
+'''
+from sys import stdin
+input = stdin.readline
+
+def move(r,c,d, matrix):
+    dx, dy = dt[d]
+    nx, ny = r+dx, c+dy
+    while matrix[nx][ny] == '.':
+        matrix[nx][ny], matrix[r][c] = matrix[r][c], matrix[nx][ny]
+        r, c = nx, ny
+        nx, ny = r+dx, c+dy
+    if matrix[nx][ny] == 'O':
+        matrix[r][c] = '.'
+        r, c = nx, ny
+        return matrix, r, c, True
+    return matrix, r, c, False
+
+def recur(n, rr, rc, br, bc, matrix):
+    global answer
+    if n > 10 or n >= answer: return
+
+    # 왼쪽으로 움직일 때 빨간 공이 더 왼쪽에 있으면
+    if rc <= bc:
+        narr, nrr, nrc, o_red = move(rr, rc, 0, [row[:] for row in matrix])
+        narr, nbr, nbc, o_blue = move(br, bc, 0, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    else:
+        narr, nbr, nbc, o_blue = move(br, bc, 0, [row[:] for row in matrix])
+        narr, nrr, nrc, o_red = move(rr, rc, 0, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    # 위로 움직일 때 빨간 공이 더 위에 있으면
+    if rr <= br:
+        narr, nrr, nrc, o_red = move(rr, rc, 1, [row[:] for row in matrix])
+        narr, nbr, nbc, o_blue = move(br, bc, 1, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    else:
+        narr, nbr, nbc, o_blue = move(br, bc, 1, [row[:] for row in matrix])
+        narr, nrr, nrc, o_red = move(rr, rc, 1, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    # 오른쪽으로 움직일 때 빨간 공이 더 오른쪽에 있으면
+    if rc >= bc:
+        narr, nrr, nrc, o_red = move(rr, rc, 2, [row[:] for row in matrix])
+        narr, nbr, nbc, o_blue = move(br, bc, 2, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    else:
+        narr, nbr, nbc, o_blue = move(br, bc, 2, [row[:] for row in matrix])
+        narr, nrr, nrc, o_red = move(rr, rc, 2, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    # 아래로 움직일 때 빨간 공이 더 밑에 있으면
+    if rr >= br:
+        narr, nrr, nrc, o_red = move(rr, rc, 3, [row[:] for row in matrix])
+        narr, nbr, nbc, o_blue = move(br, bc, 3, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+    else:
+        narr, nbr, nbc, o_blue = move(br, bc, 3, [row[:] for row in matrix])
+        narr, nrr, nrc, o_red = move(rr, rc, 3, narr)
+
+        if o_red and not o_blue:
+            answer = min(answer, n)
+            return
+        elif not o_red and not o_blue and (nrr,nrc,nbr,nbc) not in visited:
+            visited.add((nrr,nrc,nbr,nbc))
+            recur(n+1, nrr, nrc, nbr, nbc, narr)
+            visited.remove((nrr,nrc,nbr,nbc))
+
+
+N, M = map(int, input().split())
+matrix = [list(input().rstrip()) for _ in range(N)]
+dt = ((0,-1),(-1,0),(0,1),(1,0))
+visited = set()
+rr, rc, br, bc = None, None, None, None
+for r in range(N):
+    for c in range(M):
+        if matrix[r][c] == 'R':
+            rr, rc = r, c
+        elif matrix[r][c] == 'B':
+            br, bc = r, c
+visited.add((rr,rc,br,bc))
+answer = 987654321
+recur(1, rr, rc, br, bc, matrix)
+print(-1 if answer == 987654321 else answer)
