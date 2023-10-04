@@ -20,6 +20,13 @@
 - 사실 순수함수가 아니고 외부 변수를 건드리는 거라서 저렇게 짜도 되는지 모르겠지만 제출해보니 성공인걸 보면 ㄱㅊ나봄
 - 실제로는 매개변수와 리턴값으로 해줘야겠지만 메모리를 고려하여 매개변수 없이 function() -> None으로 작성
 """ 
+# 2차 풀이
+'''
+- 3분 정도 읽고 15:06 풀기
+- 1차. 풀이시간 50분 (틀렸습니다 3%)
+- 2차. dt에서 (1,0)가 (0,1)로 잘못 입력되어있었음.... TC 맞은게 용하다 (117680kb, 192ms)
+- 3차. itwill 코드 보고 범위 밖을 파란색으로 변경 + d ^= 1 (192ms -> 180ms)
+'''
 
 import sys
 sys.stdin = open('input.txt','r')
@@ -90,3 +97,56 @@ for turn in range(1,1002):
     if exit: break
 
 print(-1 if can_not_exit else turn)
+
+# 2번째 풀이
+def move(idx,r,c,nx,ny,red=False):
+    where = matrix[r][c].index(idx)
+    together = matrix[r][c][where:]
+    matrix[r][c] = matrix[r][c][:where]
+    if red: together.reverse()
+    matrix[nx][ny].extend(together)
+    if len(matrix[nx][ny]) >= 4: return True
+    for h in together:
+        horse[h] = [nx,ny,horse[h][-1]]
+
+def blue(idx,r,c,d):
+    d ^= 1      # 1 <-> 0 / 2 <-> 3
+    dx, dy = dt[d]
+    nx, ny = r+dx, c+dy
+    if game_map[nx][ny] == BLUE:
+        horse[idx] = [r,c,d]
+    else:
+        horse[idx] = [nx,ny,d]
+        if game_map[nx][ny] == WHITE:
+            return move(idx,r,c,nx,ny)
+        elif game_map[nx][ny] == RED:
+            return move(idx,r,c,nx,ny,True)
+
+N, K = map(int, input().split())
+game_map = [['2']*(N+2)] + [['2'] + input().split() + ['2'] for _ in range(N)] + [['2']*(N+2)]
+WHITE, RED, BLUE = '0', '1', '2'
+dt = ((0,1),(0,-1),(-1,0),(1,0))
+matrix = [[[] for _ in range(N+2)] for _ in range(N+2)]
+horse = []
+for idx in range(K):
+    r, c, d = map(lambda x: int(x), input().split())
+    horse.append([r,c,d-1])
+    matrix[r][c].append(idx)
+
+for turn in range(1,1001):
+    terminate = False
+    for idx,(r,c,d) in enumerate(horse):
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+        if game_map[nx][ny] == WHITE:
+            terminate = move(idx,r,c,nx,ny)
+        elif game_map[nx][ny] == RED:
+            terminate = move(idx,r,c,nx,ny,True)
+        else:
+            terminate = blue(idx,r,c,d)
+
+        if terminate: break
+    if terminate:
+        print(turn)
+        break
+else: print(-1)

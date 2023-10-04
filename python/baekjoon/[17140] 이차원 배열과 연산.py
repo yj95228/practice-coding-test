@@ -80,3 +80,45 @@ for k in range(102):
 
     matrix = remake(matrix, rows < columns)
     rows, columns = len(matrix), len(matrix[0])
+
+# 2차 풀이
+def calc(matrix, col=False):
+    N, M = len(matrix), len(matrix[0])
+    narr = [[] for _ in range(N)]
+    mx = 0
+
+    for r in range(N):
+        cnt = dict()
+        for c in range(M):
+            if matrix[r][c] == 0: continue
+            if matrix[r][c] in cnt:
+                cnt[matrix[r][c]] += 1
+            else:
+                cnt[matrix[r][c]] = 1
+        for num in sorted(cnt, key=lambda k: (cnt[k],k)):
+            narr[r].extend([num, cnt[num]])
+        mx = max(mx, len(narr[r]))
+    mx = min(100, mx)
+
+    for r in range(N):
+        narr[r].extend([0]*(mx-len(narr[r])))
+        narr[r] = narr[r][:100]
+
+    return list(zip(*narr)) if col else narr
+
+R, C, K = map(int, input().split())
+R, C = R-1, C-1
+matrix = [list(map(int, input().split())) for _ in range(3)]
+
+for time in range(101):
+    if R < len(matrix) and C < len(matrix[0]) and matrix[R][C] == K:
+        print(time)
+        break
+
+    N, M = len(matrix), len(matrix[0])
+    if N >= M:
+        matrix = calc(matrix)
+    else:
+        matrix = calc(list(zip(*matrix)), col=True)
+else:
+    print(-1)

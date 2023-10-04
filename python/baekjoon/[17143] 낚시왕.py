@@ -57,3 +57,45 @@ for fisher in range(C):
     matrix = new_matrix
 
 print(answer)
+
+# 2차 풀이
+R, C, M = map(int, input().split())
+matrix = [[None for _ in range(C)] for _ in range(R)]
+dt = ((-1,0),(1,0),(0,1),(0,-1))
+for _ in range(M):
+    r, c, s, d, z = map(int, input().split())   # (r,c): 위치, s: 속력, d: 이동방향, z: 크기
+    matrix[r-1][c-1] = (s,d-1,z)
+
+answer = 0
+for c in range(C):
+    # 상어 잡기
+    for r in range(R):
+        if matrix[r][c] is not None:
+            answer += matrix[r][c][-1]
+            matrix[r][c] = None
+            break
+
+    # 상어 이동
+    narr = [[None for _ in range(C)] for _ in range(R)]
+    for r in range(R):
+        for c in range(C):
+            if matrix[r][c] is not None:
+                s, d, z = matrix[r][c]
+                dx, dy = dt[d]
+
+                nx, ny = (r+s*dx)%(2*(R-1)), (c+s*dy)%(2*(C-1))
+                if nx > R-1:
+                    nx = 2*(R-1)-nx
+                    if d == 0: d = 1
+                    elif d == 1: d = 0
+                if ny > C-1:
+                    ny = 2*(C-1)-ny
+                    if d == 2: d = 3
+                    elif d == 3: d = 2
+
+                if narr[nx][ny] is not None and narr[nx][ny][-1] > z: continue
+                narr[nx][ny] = [s,d,z]
+
+    matrix = narr
+
+print(answer)

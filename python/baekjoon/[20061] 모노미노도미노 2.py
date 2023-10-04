@@ -4,10 +4,6 @@
 # 3차 제출: blue를 뒤집어서 코드 새로 짜기
 # 4차 제출: 행과 열이 헷갈려서 X,Y 등등 실수 수정
 # 5차 제출: i+1이 안되어있었음 (121512kb, 348ms)
-'''TODO
-- 아직도 코드 개판이라 수정해야 할 것 같음
-- 충분히 반복을 줄일 수 있는데 그러지 못함
-'''
 # https://www.acmicpc.net/problem/19236
 import sys
 sys.stdin = open('input.txt','r')
@@ -106,3 +102,63 @@ for _ in range(N):
 
 print(answer)
 print(sum(sum(blue,[]))+sum(sum(green,[])))
+
+# 2차 풀이
+'''
+- 폭발시킬 때 한번에 처리 (idx 바뀌므로)
+- 1차. 19:00 ~ 19:50 틀렸습니다 1%
+- 2차. 폭발시킬 때 idx 앞에서부터 처리
+'''
+def put(t,x,y,arr,green=True):
+    global answer
+    where = 5
+    explode = []
+    if green:
+        for rr, cc in green_block[t]:
+            lst = [row[y+cc] for row in arr]
+            where = min(where, lst.index(1)-1 if any(lst) else 5)
+        for rr, cc in green_block[t]:
+            arr[where+rr][y+cc] = 1
+            if all(arr[where+rr]):
+                explode.append(where+rr)
+
+    else:
+        for rr, cc in blue_block[t]:
+            lst = [row[3-x+cc] for row in arr]
+            where = min(where, lst.index(1)-1 if any(lst) else 5)
+        for rr, cc in blue_block[t]:
+            arr[where+rr][3-x+cc] = 1
+            if all(arr[where+rr]):
+                explode.append(where+rr)
+
+    for r in sorted(explode):
+        answer += 1
+        arr.pop(r)
+        arr.insert(0,[0]*4)
+
+N = int(input())
+green = [[0]*4 for _ in range(6)]
+blue = [[0]*4 for _ in range(6)]
+green_block = [[(0,0)],[(0,0),(0,1)],[(0,0),(-1,0)]]
+blue_block = [[(0,0)],[(0,0),(-1,0)],[(0,0),(0,-1)]]
+answer = 0
+for _ in range(N):
+    t, x, y = map(int, input().split())
+    put(t-1,x,y,green)
+    if any(green[0]):
+        green.pop()
+        green.insert(0,[0]*4)
+    if any(green[1]):
+        green.pop()
+        green.insert(0,[0]*4)
+
+    put(t-1,x,y,blue,False)
+    if any(blue[0]):
+        blue.pop()
+        blue.insert(0,[0]*4)
+    if any(blue[1]):
+        blue.pop()
+        blue.insert(0,[0]*4)
+
+print(answer)
+print(sum(map(sum,green))+sum(map(sum,blue)))

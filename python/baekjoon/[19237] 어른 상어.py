@@ -93,3 +93,73 @@ while True:
         break
 
     smell = new_matrix
+
+# 2차 풀이
+'''
+- 1차. 21:37 ~ 22:33
+- 2차. 냄새를 먼저 -1 해주고 냄새 뿌려주는 걸로 순서 바꾸기
+'''
+N, M, K = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+smell = [[[0,0] for _ in range(N)] for _ in range(N)]
+dt = ((-1,0),(1,0),(0,-1),(0,1))
+shark = list(map(lambda x: [int(x)-1], input().split()))
+shark_dt = [[[] for _ in range(4)] for _ in range(M)]
+for m in range(M):
+    for i in range(4):
+        shark_dt[m][i] = list(map(lambda x: int(x)-1, input().split()))
+for r in range(N):
+    for c in range(N):
+        if matrix[r][c]:
+            shark[matrix[r][c]-1].extend([r,c])
+            smell[r][c] = [matrix[r][c], K+1]
+
+for time in range(1,1001):
+    for r in range(N):
+        for c in range(N):
+            if smell[r][c][0]:
+                smell[r][c][1] -= 1
+                if smell[r][c][1] == 0:
+                    smell[r][c][0] = 0
+
+    narr = [[0]*N for _ in range(N)]
+    nsmell = [[x[:] for x in row] for row in smell]
+    for m in range(M):
+        if shark[m][0] is None: continue
+        d, r, c = shark[m]
+        td, tr, tc = None, None, None
+        for nd in shark_dt[m][d]:
+            dx, dy = dt[nd]
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N:
+                if smell[nx][ny][0]:
+                    # 자신의 냄새가 있는 곳
+                    if td is None and m+1 == smell[nx][ny][0]:
+                        td, tr, tc = nd, nx, ny
+                # 아무 냄새가 없는 칸
+                else:
+                    # 다른 상어가 있으면
+                    if narr[nx][ny]:
+                        shark[m] = [None, None, None]
+                    else:
+                        narr[nx][ny] = m+1
+                        shark[m] = [nd, nx, ny]
+                        nsmell[nx][ny] = [m+1, K+1]
+                    break
+        else:
+            # 다른 상어가 있으면
+            if narr[tr][tc]:
+                shark[m] = [None, None, None]
+            else:
+                shark[m] = [td, tr, tc]
+                nsmell[tr][tc] = [m+1, K+1]
+                narr[tr][tc] = m+1
+
+    # 1번 상어만 격자에 남으면
+    if sum([x for row in narr for x in row]) == 1:
+        print(time)
+        break
+
+    smell = nsmell
+
+else: print(-1)

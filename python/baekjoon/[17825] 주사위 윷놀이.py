@@ -165,3 +165,43 @@ answer = 0
 horse = [[0,0],[0,0],[0,0],[0,0]]
 dfs(0,0)
 print(answer)
+
+# 두번째 풀이
+'''
+- 1차. 17:00 ~ 18:27 - 틀렸습니다 7%
+- 2차. 28,27,26점인데 26,27,28점으로 씀 - 틀렸습니다 9%
+- 3차. 도착지점 33 아니고 32임.. - 틀렸습니다 9%
+- 4차. 38(idx=19)에서 40(idx=31)로 가야하는데 idx=32로 감.. (120384kb, 372ms)
+- 5차. 앞으로 남은 턴에 40을 다 더해도 최대값 갱신을 못하면 가지치기 (372ms -> 196ms)
+'''
+def recur(n,horse,sm):
+    global answer
+    if sm+(N-n)*40 < answer:
+        return
+    elif n == N:
+        answer = max(answer, sm)
+        return
+    for i,h in enumerate(horse):
+        if h == 32: continue
+        if len(graph[h]) > 1:
+            next = graph[h][1]
+        else:
+            next = graph[h][0]
+
+        for _ in range(int(arr[n])-1):
+            next = graph[next][0]
+
+        if next == 32 or next not in horse:
+            horse[i] = next
+            recur(n+1, horse, sm+score[next])
+            horse[i] = h
+
+# idx     0   1   2   3   4   5      6   7   8   9    10      11   12   13   14   15      16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32
+score = [ 0,  2,  4,  6,  8,  10,    12, 14, 16, 18,  20,     22,  24,  26,  28,  30,     32,  34,  36,  38,  13,  16,  19,  22,  24,  28,  27,  26,  25,  30,  35,  40,  0]
+graph = [[1],[2],[3],[4],[5],[6,20],[7],[8],[9],[10],[11,23],[12],[13],[14],[15],[16,25],[17],[18],[19],[31],[21],[22],[28],[24],[28],[26],[27],[28],[29],[30],[31],[32],[32]]
+horse = [0]*4
+arr = list(map(int, input().split()))
+N = len(arr)
+answer = 0
+recur(0,horse,0)
+print(answer)
