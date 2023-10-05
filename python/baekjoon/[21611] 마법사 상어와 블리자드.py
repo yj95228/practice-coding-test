@@ -97,3 +97,90 @@ for _ in range(M):
     matrix = new_matrix
 
 print(score[0]+2*score[1]+3*score[2])
+
+# 2차 풀이
+'''
+- 1차. 14:16 ~ 14:18 / 14:32 ~ 15:00 - 틀렸습니다 43%
+- 2차. 달팽이 중력 돌릴 때 N*N-1 => N*N 수정 - 틀렸습니다 43%
+- 3차. 스택 마지막 처리 안 함
+- 4차. (117264kb, 204ms) 2시간 소요 ㅠㅠ 
+- 도저히 모르겠어서 질문 게시판 반례 참조해서 과거의 내 코드와 비교해 봄.. ㅠㅠ
+반례 케이스 -> https://www.acmicpc.net/board/view/102029 맨 아래 댓글
+폭발을 순차적으로 시킨 다음에 다음 반복문 돌아야 하는데 동시다발적으로 stack 보면서 폭발되어서 생긴 오류
+'''
+N, M = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+sr, sc = N//2, N//2
+dt = ((-1,0),(1,0),(0,-1),(0,1))
+snail_dt = ((0,-1),(1,0),(0,1),(-1,0))
+snail = [(sr, sc)]
+visited = [[False]*N for _ in range(N)]
+visited[sr][sc] = True
+d = -1
+answer = [0,0,0]
+for _ in range(N*N-1):
+    r, c = snail[-1]
+    dx, dy = snail_dt[(d+1)%4]
+    nx, ny = r+dx, c+dy
+    if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+        visited[nx][ny] = True
+        snail.append((nx,ny))
+        d = (d+1)%4
+        r, c = nx, ny
+    else:
+        dx, dy = snail_dt[d]
+        nx, ny = r+dx, c+dy
+        visited[nx][ny] = True
+        snail.append((nx,ny))
+        r, c = nx, ny
+
+for _ in range(M):
+    d, s = map(int, input().split())
+    dx, dy = dt[d-1]
+    for i in range(1,s+1):
+        matrix[sr+i*dx][sc+i*dy] = 0
+
+    goosle = []
+    for i in range(1,N*N):
+        r, c = snail[i]
+        if matrix[r][c]:
+            goosle.append(matrix[r][c])
+
+    while True:
+        cnt, stack, explode = 0, [], False
+        for x in goosle:
+            if stack:
+                if stack[-1] == x:
+                    cnt += 1
+                else:
+                    if cnt >= 4:
+                        color = stack[-1]
+                        while stack and color == stack[-1]:
+                            answer[stack.pop()-1] += 1
+                        explode = True
+                    cnt = 1
+            else: cnt = 1
+            stack.append(x)
+        if cnt >= 4:
+            color = stack[-1]
+            while stack and color == stack[-1]:
+                answer[stack.pop()-1] += 1
+            explode = True
+        goosle = stack
+        if not explode: break
+
+    new_goosle = []
+    if goosle:
+        new_goosle.extend([0,goosle[0]])
+        for x in goosle:
+            if x == new_goosle[-1]:
+                new_goosle[-2] += 1
+            else:
+                new_goosle.extend([1,x])
+
+    matrix = [[0]*N for _ in range(N)]
+    for i,x in enumerate(new_goosle[:N*N-1]):
+        r, c = snail[i+1]
+        matrix[r][c] = x
+
+print(sum(map(lambda x: x[0]*x[1], zip(answer,[1,2,3]))))

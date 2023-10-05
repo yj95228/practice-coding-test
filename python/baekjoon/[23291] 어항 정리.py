@@ -83,3 +83,68 @@ while True:
 
     # 8. 바닥에 일렬로 놓기
     arr = flatten(new_arr)
+
+# 2차 풀이
+def jojeol(arr):
+    narr = [row[:] for row in arr]
+    for r in range(len(arr)):
+        for c in range(len(arr[0])):
+            if arr[r][c] is None: continue
+            for dx, dy in ((1,0),(0,1)):
+                nx, ny = r+dx, c+dy
+                if 0 <= nx < len(arr) and 0 <= ny < len(arr[0]) and arr[nx][ny] is not None:
+                    diff = abs(arr[r][c]-arr[nx][ny])//5
+                    if diff > 0:
+                        if arr[r][c] > arr[nx][ny]:
+                            narr[r][c] -= diff
+                            narr[nx][ny] += diff
+                        else:
+                            narr[r][c] += diff
+                            narr[nx][ny] -= diff
+    return narr
+
+def flatten(narr):
+    arr = []
+    for c in range(len(narr[0])):
+        for r in range(len(narr)-1,-1,-1):
+            if narr[r][c] is None: continue
+            arr.append(narr[r][c])
+    return arr
+
+N, K = map(int, input().split())
+arr = list(map(int, input().split()))
+jungri = 0
+while max(arr)-min(arr) > K:
+    jungri += 1
+
+    mn = min(arr)
+    arr = list(map(lambda x: x+1 if x == mn else x, arr))
+
+    arr = [[arr[0]]] + [arr[1:]]
+
+    # 공중부양 후 시계방향 90도 회전
+    arr = [[row[0] for row in arr][::-1] + [None]*(len(arr[-1][1:])-2)] + [arr[-1][1:]]
+    while None in arr[0]:
+        idx = arr[0].index(None)
+        bottom = [arr[-1][idx:]]
+        up = list(map(list, zip(*[row[:idx] for row in arr][::-1])))
+        if len(bottom[0])-len(up[0]) < 0: break
+        arr = [row+[None]*(len(bottom[0])-len(up[0])) for row in up] + bottom
+
+    # 물고기 수 조절
+    narr = jojeol(arr)
+    # 바닥에 놓기
+    arr = flatten(narr)
+
+    # 공중 부양
+    NN = N//2
+    arr = [arr[:NN][::-1]] + [arr[NN:]]
+    NN //= 2
+    arr = [row[:NN][::-1] for row in arr][::-1] + [row[NN:] for row in arr]
+
+    # 물고기 수 조절
+    narr = jojeol(arr)
+    # 바닥에 놓기
+    arr = flatten(narr)
+
+print(jungri)

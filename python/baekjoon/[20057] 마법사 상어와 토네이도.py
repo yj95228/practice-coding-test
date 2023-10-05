@@ -53,3 +53,75 @@ for i in range(1,N*N+1):
     if not visited[r+dt[(d+1)%4][0]][c+dt[(d+1)%4][1]]:
         d = (d+1)%4
 print(answer)
+
+# 2차 풀이
+'''
+- 1차. 09:45 ~ 10:47
+- 달팽이 배열 만드는거 오래 걸림
+- 모래가 밖으로 날릴 때 total에서 안 빼줌
+'''
+N = int(input())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+visited = [[False]*N for _ in range(N)]
+visited[N//2][N//2] = True
+snail = [(N//2,N//2)]
+dt = ((0,-1),(1,0),(0,1),(-1,0))
+d = -1
+for _ in range(N*N-1):
+    r, c = snail[-1]
+    dx, dy = dt[(d+1)%4]
+    nx, ny = r+dx, c+dy
+    if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+        visited[nx][ny] = True
+        snail.append((nx,ny))
+        d = (d+1)%4
+    else:
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+        visited[nx][ny] = True
+        snail.append((nx,ny))
+snail.append((0,-1))
+rates = [
+    [(1,-1,0),(1,1,0),(7,-1,-1),(7,1,-1),(2,-2,-1),(2,2,-1),(10,-1,-2),(10,1,-2),(5,0,-3)],
+    [(1,0,-1),(1,0,1),(7,1,-1),(7,1,1),(2,1,-2),(2,1,2),(10,2,-1),(10,2,1),(5,3,0)],
+    [(1,-1,0),(1,1,0),(7,-1,1),(7,1,1),(2,-2,1),(2,2,1),(10,-1,2),(10,1,2),(5,0,3)],
+    [(1,0,-1),(1,0,1),(7,-1,-1),(7,-1,1),(2,-1,-2),(2,-1,2),(10,-2,-1),(10,-2,1),(5,-3,0)],
+]
+answer = 0
+for i, (r, c) in enumerate(snail[:-1]):
+    x1, y1 = snail[i+1]
+    x2, y2 = snail[i]
+    dx, dy = x1-x2, y1-y2
+    nx, ny = r+dx, c+dy
+
+    if 0 <= nx < N and 0 <= ny < N:
+        total = matrix[nx][ny]
+        d = 0
+        for dd, (xx, yy) in enumerate(dt):
+            if (xx,yy) == (dx,dy):
+                d = dd
+                break
+
+        for rate, dx, dy in rates[d]:
+            sand = rate*matrix[nx][ny]//100
+            nr, nc = r+dx, c+dy
+            if 0 <= nr < N and 0 <= nc < N:
+                matrix[nr][nc] += sand
+                total -= sand
+            else:
+                total -= sand
+                answer += sand
+
+        dx, dy = x1-x2, y1-y2
+        nr, nc = nx+dx, ny+dy
+        if 0 <= nr < N and 0 <= nc < N:
+            matrix[nr][nc] += total
+        else:
+            answer += total
+        matrix[nx][ny] = 0
+
+    else:
+        answer += matrix[r][c]
+        matrix[r][c] = 0
+
+print(answer)

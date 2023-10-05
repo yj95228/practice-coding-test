@@ -91,3 +91,66 @@ for arr in matrix:
             if fish >= 0:
                 answer += 1
 print(answer)
+
+# 2차 풀이 -> 20:00 ~ 21:21 배열 복사 너무 힘들다..
+def recur(n, x, y, result, arr, nsmell):
+    global sx, sy, mx, narr, smell
+    if n == 3:
+        if mx < result:
+            mx = result
+            sx, sy = x, y
+            narr = arr
+            smell = nsmell
+        return
+    for dx, dy in ((-1,0),(0,-1),(1,0),(0,1)):
+        nx, ny = x+dx, y+dy
+        sm = 0
+        if 0 <= nx < 4 and 0 <= ny < 4:
+            tmp1, tmp2 = nsmell[nx][ny], arr[nx][ny][:]
+            for d in range(8):
+                if not arr[nx][ny][d]: continue
+                sm += arr[nx][ny][d]
+                arr[nx][ny][d] = 0
+                nsmell[nx][ny] = 3
+            recur(n+1, nx, ny, result+sm, [[x[:] for x in row] for row in arr], [row[:] for row in nsmell])
+            nsmell[nx][ny] = tmp1
+            arr[nx][ny] = tmp2
+
+M, S = map(int, input().split())
+matrix = [[[0]*8 for _ in range(4)] for _ in range(4)]
+dt = ((0,-1),(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1))
+for _ in range(M):
+    x, y, d = map(lambda x: int(x)-1, input().split())
+    matrix[x][y][d] += 1
+sx, sy = map(lambda x: int(x)-1, input().split())
+smell = [[0]*4 for _ in range(4)]
+
+for _ in range(S):
+    magic = [[row[:] for row in arr2d] for arr2d in matrix]
+    narr = [[[0]*8 for _ in range(4)] for _ in range(4)]
+
+    for r in range(4):
+        for c in range(4):
+            for d in range(8):
+                if not matrix[r][c][d]: continue
+                for i in range(8):
+                    dx, dy = dt[(d-i)%8]
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < 4 and 0 <= ny < 4 and not smell[nx][ny] and (nx,ny) != (sx,sy):
+                        narr[nx][ny][(d-i)%8] += matrix[r][c][d]
+                        break
+                else:
+                    narr[r][c][d] += matrix[r][c][d]
+
+    mx = -1
+    recur(0, sx, sy, 0, narr, smell)
+
+    for r in range(4):
+        for c in range(4):
+            if smell[r][c]:
+                smell[r][c] -= 1
+            for d in range(8):
+                narr[r][c][d] += magic[r][c][d]
+    matrix = narr
+
+print(sum([x for arr2d in matrix for row in arr2d for x in row]))
