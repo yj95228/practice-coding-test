@@ -128,3 +128,85 @@ for _ in range(M):
             print(f'{x:3d}', end='')
         print()
     print('4.정답',answer)
+
+# 2차 풀이
+'''
+- 1차. 13:56 ~ 14:31 nx,ny를 rr,cc라고 오타냄 ㅠ
+'''
+from sys import stdin
+input = stdin.readline
+
+# 격자의 크기 n, 박멸이 진행되는 년 수 m, 제초제의 확산 범위 k, 제초제가 남아있는 년 수 c
+N, M, K, C = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+answer = 0
+jecho = [[0]*N for _ in range(N)]
+for _ in range(M):
+    # 1. 나무 성장
+    arr = [row[:] for row in matrix]
+    for r in range(N):
+        for c in range(N):
+            if matrix[r][c] > 0:
+                cnt = 0
+                for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < N and 0 <= ny < N and matrix[nx][ny] > 0:
+                        cnt += 1
+                arr[r][c] += cnt
+
+    # 2. 번식
+    narr = [row[:] for row in arr]
+    for r in range(N):
+        for c in range(N):
+            if arr[r][c] > 0:
+                bunsik = []
+                for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < N and 0 <= ny < N and arr[nx][ny] == 0 and not jecho[nx][ny]:
+                        bunsik.append((nx,ny))
+                cnt = len(bunsik)
+                for nx, ny in bunsik:
+                    narr[nx][ny] += arr[r][c]//cnt
+
+    # 3. 나무 박멸
+    # 가장 많이 박멸시키는 곳 찾기
+    rr, cc, mx = 0, 0, 0
+    for r in range(N):
+        for c in range(N):
+            sm = 0
+            if narr[r][c] > 0:
+                sm += narr[r][c]
+                for dx, dy in ((1,1),(-1,1),(1,-1),(-1,-1)):
+                    for k in range(1,K+1):
+                        nx, ny = r+k*dx, c+k*dy
+                        if 0 <= nx < N and 0 <= ny < N and narr[nx][ny] > 0:
+                            sm += narr[nx][ny]
+                        else: break
+                if mx < sm: rr, cc, mx = r, c, sm
+
+    # 찾은 곳에 뿌리기
+    if narr[rr][cc] > 0:
+        answer += narr[rr][cc]
+        narr[rr][cc] = 0
+        for dx, dy in ((1,1),(-1,1),(1,-1),(-1,-1)):
+            for k in range(1,K+1):
+                nx, ny = rr+k*dx, cc+k*dy
+                if 0 <= nx < N and 0 <= ny < N:
+                    if narr[nx][ny] > 0:
+                        answer += narr[nx][ny]
+                        narr[nx][ny] = 0
+                        jecho[nx][ny] = C+1
+                    else:
+                        jecho[nx][ny] = C+1
+                        break
+                else: break
+    jecho[rr][cc] = C+1
+
+    # 제초제 약효 떨어짐
+    for r in range(N):
+        for c in range(N):
+            if jecho[r][c] > 0:
+                jecho[r][c] -= 1
+    matrix = narr
+
+print(answer)

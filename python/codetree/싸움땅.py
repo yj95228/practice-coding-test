@@ -103,3 +103,100 @@ for _ in range(K):
             where[x][y], where[nx][ny] = where[nx][ny], where[x][y]
 
 print(*score)
+
+# 2차 풀이
+'''
+- 1차. 13:56 ~ 15:44 - TC 6번에서 틀림
+- 2차. 17:12 갈아엎고 다시 짜자
+- 3차. player[lose] = [nx2, ny2, (d2+i)%4, player[lose][3], heappop(matrix[nx2][ny2]+[0])]
+- 여기서 matrix[nx2][ny2]에서 바로 줍는게 아니라 새로운 배열에서 주워버려서 지도에 남아버림
+'''
+from sys import stdin
+from collections import deque
+from heapq import heappop, heappush
+input = stdin.readline
+
+# n은 격자의 크기, m은 플레이어의 수, k는 라운드의 수
+N, M, K = map(int, input().split())
+matrix = [list(map(lambda x: [] if x == '0' else [-int(x)], input().split())) for _ in range(N)]
+where = [[0]*N for _ in range(N)]
+dt = ((-1,0),(0,1),(1,0),(0,-1))            # ↑, →, ↓, ←
+player = []
+for idx in range(1,M+1):
+    x, y, d, s = map(int, input().split())  # 위치, 방향, 초기 능력치
+    player.append([x-1,y-1,d,s,0])
+    where[x-1][y-1] = idx
+score = [0]*M
+for _ in range(K):
+    for me in range(M):
+        r, c, d, s, g = player[me]
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+
+        # 격자 벗어나는 경우 방향 바꿔 이동
+        if nx < 0 or nx >= N or ny < 0 or ny >= N:
+            d = (d+2)%4
+            player[me][2] = d
+            nx, ny = r-dx, c-dy
+
+        player[me][0], player[me][1] = nx, ny
+
+        if where[nx][ny]:
+            where[r][c] = 0
+            other = where[nx][ny]-1
+            rr, cc, dd, ss, gg = player[other]
+
+            # 해당 플레이어 초기 능력치과 총의 공격력의 합 비교
+            win, lose = None, None
+            if s-g > ss-gg: win, lose = me, other
+            elif s-g < ss-gg: win, lose = other, me
+            elif s > ss: win, lose = me, other
+            else: win, lose = other, me
+
+            r1, c1, d1, s1, g1 = player[win]
+            r2, c2, d2, s2, g2 = player[lose]
+            # 초기 능력치과 공격력의 합의 차이만큼 획득
+            score[win] += (s1-g1)-(s2-g2)
+
+            # 진 플레이어 처리
+            heappush(matrix[r2][c2], g2)
+            player[lose][-1] = 0
+            dx, dy = dt[d2]
+            nnx, nny = nx+dx, ny+dy
+            while not (0 <= nnx < N and 0 <= nny < N) or where[nnx][nny]:
+                d2 = (d2+1)%4
+                dx, dy = dt[d2]
+                nnx, nny = nx+dx, ny+dy
+            if not matrix[nnx][nny]:
+                player[lose] = [nnx, nny, d2, player[lose][3], 0]
+            else:
+                player[lose] = [nnx, nny, d2, player[lose][3], heappop(matrix[nnx][nny])]
+
+            # 이긴 플레이어 처리
+            # 플레이어가 이미 총을 가지고 있으면 놓여있는 총 중 가장 센거 획득하고 나머지 격자에 둠
+            if not matrix[nx][ny]: continue
+            gun = heappop(matrix[nx][ny])
+            if gun < g1:
+                player[win][-1] = gun
+                heappush(matrix[nx][ny], g1)
+            else:
+                player[win][-1] = g1
+                heappush(matrix[nx][ny], gun)
+
+            where[r1][c1], where[r2][c2] = 0, 0
+            where[nnx][nny], where[nx][ny] = lose+1, win+1
+
+        # 이동 방향에 플레이어 없으면
+        else:
+            # 총 있으면 총 획득
+            where[nx][ny], where[r][c] = where[r][c], where[nx][ny]
+            if not matrix[nx][ny]: continue
+            gun = heappop(matrix[nx][ny])
+            if gun < g:
+                player[me] = [nx, ny, d, s, gun]
+                heappush(matrix[nx][ny], g)
+            else:
+                player[me] = [nx, ny, d, s, g]
+                heappush(matrix[nx][ny], gun)
+
+print(*score)

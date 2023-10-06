@@ -90,3 +90,83 @@ matrix = rotate()
 answer += get_score()
 
 print(answer)
+
+# 2차 풀이
+'''
+- 1차. 10:20 ~ 10:56 전에는 맞닿아 있는 변은 생각보다 쉽게 구하고 회전이 어려웠는데 이번에는 반대임..
+'''
+
+def dfs(x,y,group):
+    groups[x][y] = group
+    stack = [(x,y)]
+    color = matrix[x][y]
+    cnt = 1
+    while stack:
+        r, c = stack.pop()
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not groups[nx][ny] and matrix[nx][ny] == color:
+                cnt += 1
+                groups[nx][ny] = group
+                stack.append((nx,ny))
+    cnts.append(cnt)
+
+def johwa(x,y):
+    color = groups[x][y]
+    v_groups[color] = True
+    stack = [(x,y)]
+    visited = [[False]*N for _ in range(N)]
+    visited[x][y] = True
+    while stack:
+        r, c = stack.pop()
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+                if groups[nx][ny] == color:
+                    stack.append((nx,ny))
+                    visited[nx][ny] = True
+                else:
+                    score[color][groups[nx][ny]] += 1
+
+def rotate(arr):
+    narr = [[0]*N for _ in range(N)]
+    for r in range(N):
+        for c in range(N):
+            if r == N//2 or c == N//2:
+                narr[r][c] = arr[c][N-r-1]
+    for r in range(0,N,N//2+1):
+        for c in range(0,N,N//2+1):
+            for i in range(N//2):
+                for j in range(N//2):
+                    narr[r+i][c+j] = arr[r+N//2-j-1][c+i]
+    return narr
+
+N = int(input())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+answer = 0
+for turn in range(4):
+    group = 1
+    groups = [[0]*N for _ in range(N)]
+    nums, cnts = [0], [0]
+    for r in range(N):
+        for c in range(N):
+            if not groups[r][c]:
+                dfs(r,c,group)
+                nums.append(matrix[r][c])
+                group += 1
+
+    v_groups = [0]*group
+    score = [[0]*group for _ in range(group)]
+    for r in range(N):
+        for c in range(N):
+            if not v_groups[groups[r][c]]:
+                johwa(r,c)
+
+    for i in range(1,group-1):
+        for j in range(i+1,group):
+            answer += (cnts[i]+cnts[j])*nums[i]*nums[j]*score[i][j]
+
+    if turn == 3: break
+    matrix = rotate(matrix)
+
+print(answer)

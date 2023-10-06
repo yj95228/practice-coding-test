@@ -138,3 +138,111 @@ for k in range(K):
             if find: break
 
 print(answer)
+
+# 2차 풀이
+'''
+- 1차. 11:02 ~ 13:08 (점심시간 포함) -> TC 4번에서 틀림
+- 다른 사람 코드 많이 볼걸 그랬다 근데 코드트리라 너무 보기 힘드렁
+- 2차. 공 잡은 사람 idx가 머리사람 idx보다 클 경우 따로 처리
+- 저번에는 머리에서 꼬리로 dfs로 찾아가는 방식이라면 이번에는 idx 저장하는 방식으로 짬
+TODO: 다음에는 꼬리 pop 다음 경로 append 해보자
+'''
+def dfs(x,y):
+    visited[x][y] = 1
+    stack = [(x,y,3)]
+    while stack:
+        r, c, who = stack.pop()
+        if who == 1: head.append((r,c))
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+                if who == 3 and matrix[nx][ny] == 2:
+                    visited[nx][ny] = 1
+                    graph[-1].append((nx,ny))
+                    stack.append((nx,ny,2))
+                elif who == 2 and (matrix[nx][ny] == 2 or matrix[nx][ny] == 1):
+                    visited[nx][ny] = 1
+                    graph[-1].append((nx,ny))
+                    stack.append((nx,ny,matrix[nx][ny]))
+                elif (who == 1 or who == 4) and (matrix[nx][ny] == 4 or matrix[nx][ny] == 3):
+                    visited[nx][ny] = 1
+                    graph[-1].append((nx,ny))
+                    stack.append((nx,ny,matrix[nx][ny]))
+
+N, M, K = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+
+# 라운드 정보
+rounds = []
+for r in range(N):
+    round = []
+    for c in range(N):
+        round.append((r,c))
+    rounds.append(round)
+for c in range(N):
+    round = []
+    for r in range(N-1,-1,-1):
+        round.append((r,c))
+    rounds.append(round)
+for r in range(N-1,-1,-1):
+    round = []
+    for c in range(N-1,-1,-1):
+        round.append((r,c))
+    rounds.append(round)
+for c in range(N-1,-1,-1):
+    round = []
+    for r in range(N):
+        round.append((r,c))
+    rounds.append(round)
+answer, round = 0, 0
+
+# 경로, 머리사람, 꼬리사람 찾기
+visited = [[0]*N for _ in range(N)]
+graph = []
+head, tail = [], []
+for r in range(N):
+    for c in range(N):
+        if matrix[r][c] == 3:
+            graph.append([(r,c)])
+            tail.append((r,c))
+            dfs(r,c)
+
+team = len(graph)
+for _ in range(K):
+    # 이동하기
+    for i in range(team):
+        length = len(graph[i])
+        
+        # 꼬리 이동
+        idx = graph[i].index(tail[i])
+        r, c = graph[i][idx]
+        nx, ny = graph[i][(idx+1)%length]
+        matrix[nx][ny], matrix[r][c] = 3, 4
+        tail[i] = (nx,ny)
+        # 머리 이동
+        idx = graph[i].index(head[i])
+        r, c = graph[i][idx]
+        nx, ny = graph[i][(idx+1)%length]
+        matrix[nx][ny], matrix[r][c] = 1, 2
+        head[i] = (nx,ny)
+
+    # 공 던지기
+    catch = False
+    for r, c in rounds[round]:
+        if catch: break
+        if matrix[r][c] == 1 or matrix[r][c] == 2 or matrix[r][c] == 3:
+            for i in range(team):
+                if (r,c) in graph[i]:
+                    here, head_idx = graph[i].index((r,c)), graph[i].index(head[i])
+                    if head_idx >= here:
+                        answer += (head_idx-here+1)**2
+                    else:
+                        answer += (head_idx+len(graph[i])-here+1)**2
+                    matrix[head[i][0]][head[i][1]] = 3
+                    matrix[tail[i][0]][tail[i][1]] = 1
+                    head[i], tail[i] = tail[i], head[i]
+                    graph[i].reverse()
+                    catch = True
+                    break
+    round = (round+1)%(4*N)
+print(answer)
