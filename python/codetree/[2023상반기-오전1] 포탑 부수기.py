@@ -86,3 +86,68 @@ for turn in range(1,K+1):
     new_matrix = [row[:] for row in matrix]
 
 print(max(map(max, matrix)))
+
+# 2차 풀이 -> 공격 대상에 공격자는 없어야 함
+def lazer(x, y, x2, y2):
+    visited = [[None]*M for _ in range(N)]
+    visited[x][y] = (-1, -1)
+    queue = deque([(x, y)])
+    while queue:
+        r, c = queue.popleft()
+        if (r,c) == (x2,y2):
+            matrix[x2][y2] -= matrix[x][y]
+            r, c = visited[r][c]
+            while visited[r][c]:
+                if (r, c) == (x, y): return True
+                potaps.add((r, c))
+                matrix[r][c] -= matrix[x][y]//2
+                r, c = visited[r][c]
+        for dx, dy in ((0,1),(1,0),(0,-1),(-1,0)):
+            nx, ny = (r+dx)%N, (c+dy)%M
+            if not visited[nx][ny] and matrix[nx][ny] > 0:
+                visited[nx][ny] = (r, c)
+                queue.append((nx, ny))
+
+N, M, K = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+times = [[0]*M for _ in range(N)]
+for time in range(1,K+1):
+    potap = []
+    potaps = set()
+    for r in range(N):
+        for c in range(M):
+            if matrix[r][c] <= 0: continue
+            potap.append((matrix[r][c], -times[r][c], -r-c, -c, (r,c)))
+
+    if len(potap) == 1:
+        print(potap[0][0])
+        break
+
+    # 가장 약한 포탑 
+    strong, _, _, _, where = min(potap)
+    r, c = where
+    matrix[r][c] += N+M
+    times[r][c] = time
+    potaps.add((r,c))
+
+    # 가장 강한 포탑
+    _, _, _, _, where = max(potap)
+    nx, ny = where
+    potaps.add((nx,ny))
+
+    # 레이저 공격
+    if not lazer(r, c, nx, ny):
+        # 포탄 공격
+        for dx, dy in ((1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)):
+            nnx, nny = (nx+dx)%N, (ny+dy)%M
+            if matrix[nnx][nny] > 0 and (nnx,nny) != (r, c):
+                potaps.add((nnx, nny))
+                matrix[nnx][nny] -= matrix[r][c]//2
+        matrix[nx][ny] -= matrix[r][c]
+    
+    # 포탑 정비
+    for r in range(N):
+        for c in range(M):
+            if matrix[r][c] > 0 and (r,c) not in potaps:
+                matrix[r][c] += 1
+else: print(max(map(max, matrix)))

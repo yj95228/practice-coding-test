@@ -83,3 +83,85 @@ while queue:
 # # 2. 편의점 도착하면 멈추고 다른 사람들은 해당 편의점 칸을 지나갈 수 X
 # # 3. 현재 시간이 t분이고 t <= m을 만족한다면 t번 사람은 편의점과 가장 가까운 베이스 캠프 들어감
 print(max(gs25_find))
+
+
+# 두번째 풀이
+def find_base(x,y):
+    visited = [[False]*N for _ in range(N)]
+    visited[x][y] = True
+    queue = deque([(x,y)])
+    basecamp = []
+    while queue:
+        for _ in range(len(queue)):
+            r, c = queue.popleft()
+            if matrix[r][c] == '1':
+                basecamp.append((r,c))
+            for dx, dy in ((-1,0),(0,-1),(0,1),(1,0)):
+                nx, ny = r+dx, c+dy
+                if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny] and not cant_go[nx][ny]:
+                    visited[nx][ny] = True
+                    queue.append((nx,ny))
+        if basecamp:
+            return min(basecamp)
+
+def bfs(x,y,m):
+    visited = [[None]*N for _ in range(N)]
+    visited[x][y] = (-1,-1)
+    queue = deque([(x,y)])
+    while queue:
+        r, c = queue.popleft()
+        if (r,c) == cvs[m]:
+            while visited[r][c]:
+                if visited[r][c] == (x,y):
+                    return r, c
+                r, c = visited[r][c]
+            
+        for dx, dy in ((-1,0),(0,-1),(0,1),(1,0)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny] and not cant_go[nx][ny]:
+                visited[nx][ny] = (r,c)
+                queue.append((nx,ny))
+
+N, M = map(int, input().split())
+matrix = [input().split() for _ in range(N)]
+cvs = []
+where = []
+for _ in range(M):
+    X, Y = map(lambda x: int(x)-1, input().split())
+    cvs.append((X,Y))
+cant_go = [[False]*N for _ in range(N)]
+find = [0]*M
+time = 0
+while True:
+    tmp = []
+    for m in range(M):
+        if find[m]: continue
+
+        # 격자에 있는 사람들 모두 편의점 방향을 향해 1칸 움직인다
+        if m < len(where):
+            r, c = where[m]
+            bfs(r,c,m)
+            nx, ny = bfs(r,c,m)
+            where[m] = [nx, ny]
+            if (nx, ny) == cvs[m]:
+                tmp.append((nx, ny))   
+                find[m] = time+1
+
+    if all(find):
+        print(max(find))
+        break
+
+    # 편의점에 도착하면 편의점에서 멈추고 지나갈 수 없어짐
+    # 단 격자에 있는 사람들이 모두 이동한 후 지나갈 수 없어짐
+    if tmp:
+        for r, c in tmp:
+            cant_go[r][c] = True
+
+    # 현재 시간이 t분이고 t <= m를 만족하면 편의점과 가장 가까이 있는 베이스캠프 간다
+    if time <= m:
+        r, c = cvs[time]
+        br, bc = find_base(r,c)
+        where.append([br,bc])
+        cant_go[br][bc] = True
+
+    time += 1

@@ -113,3 +113,73 @@ for _ in range(1,K+1):
 
 print(answer)
 print(er+1, ec+1)
+
+# 2차 풀이 -> 정사각형 길이 조심 & 탈출 조건 언제 정할지
+def find_square():
+    # 정사각형 길이 찾기
+    length = N
+    for m in range(len(players)):
+        r, c = players[m]
+        length = min(length, max(abs(er-r),abs(ec-c))+1)
+
+    # 정사각형 위치 찾기
+    for r in range(N-length+1):
+        for c in range(N-length+1):
+            if r <= er < r+length and c <= ec < c+length:
+                for m, (rr, cc) in enumerate(players):
+                    if r <= rr < r+length and c <= cc < c+length:
+                        return r, c, length
+
+N, M, K = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(N)]
+players = [list(map(lambda x: int(x)-1, input().split())) for _ in range(M)]
+er, ec = map(lambda x: int(x)-1, input().split())
+answer = 0
+exited = [False]*M
+
+for _ in range(K):
+    # 플레이어 이동
+    for m in range(len(players)-1,-1,-1):
+        r, c = players[m]
+        can_go = []
+        distance = abs(er-r)+abs(ec-c)
+        for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+            nx, ny = r+dx, c+dy
+            new_d = abs(er-nx)+abs(ec-ny)
+            if 0 <= nx < N and 0 <= ny < N and new_d < distance and not matrix[nx][ny]:
+                can_go.append((nx, ny))
+        if can_go:
+            nx, ny = can_go[0]
+            if (nx, ny) == (er, ec):
+                exited[m] = True
+                players.pop(m)
+                answer += 1
+            else:
+                players[m] = (nx, ny)
+                answer += 1
+
+    # 플레이어 다 탈출했으면 끝 
+    if not players:
+        print(answer)
+        print(er+1, ec+1)
+        break
+    
+    # 미로 회전
+    x, y, length = find_square()
+    narr = [row[:] for row in matrix]
+    rotate = dict()
+    for r in range(length):
+        for c in range(length):
+            narr[x+c][y+length-r-1] = max(0, matrix[x+r][y+c]-1)
+            rotate[(x+r, y+c)] = (x+c, y+length-r-1)
+
+    # 출구와 플레이어 회전
+    er, ec = rotate[(er, ec)]
+    for m, (r, c) in enumerate(players):
+        if (r, c) in rotate:
+            players[m] = rotate[(r, c)]
+    matrix = narr
+
+else:
+    print(answer)
+    print(er+1, ec+1)
