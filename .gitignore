@@ -1,3 +1,9 @@
-python/*/*.txt
-python/*/main.py
+**/*.txt
+**/main.*
 .idea
+
+#java
+java/.vscode
+java/bin
+java/lib
+java/README.md
