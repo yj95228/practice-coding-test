@@ -73,3 +73,64 @@ for tc in range(1,T+1):
             dessert = set()
             dfs(r,c,0)
     print(f'#{tc} {answer}')
+
+# 2차 풀이
+def dfs(r, c, d, where, num):
+    global answer
+    for dd in [0, 1]:
+        if d == -1 and dd == 0: continue
+        elif d == 3 and dd == 1: continue
+        d = (d+dd)%4
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+        if 0 <= nx < N and 0 <= ny < N:
+            if V[nx][ny]:
+                if (nx, ny) == where[0]:
+                    answer = max(answer, len(where))
+                    return
+            else:
+                if A[nx][ny] in num: continue
+                V[nx][ny] = 1
+                dfs(nx, ny, d, where+[(nx, ny)], num+[A[nx][ny]])
+                V[nx][ny] = 0
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    A = [list(map(int, input().split())) for _ in range(N)]
+    V = [[0]*N for _ in range(N)]
+    dt = ((1,-1),(1,1),(-1,1),(-1,-1))
+
+    answer = -1
+    for r in range(N-2):
+        for c in range(1, N-1):
+            V[r][c] = 1
+            dfs(r, c, -1, [(r,c)], [A[r][c]])
+            V[r][c] = 0
+    print(f'#{tc} {answer}')
+
+# 3차 풀이
+def dfs(r, c, d, num):
+    global answer
+    dx, dy = dt[d]
+    nx, ny = r+dx, c+dy
+    if d == 3 and (nx, ny) == (sr, sc):
+        answer = max(answer, len(num))
+        return
+    elif 0 <= nx < N and 0 <= ny < N and A[nx][ny] not in num:
+        dfs(nx, ny, d, num+[A[nx][ny]])
+        if d != 3:
+            dfs(nx, ny, (d+1)%4, num+[A[nx][ny]])
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    A = [list(map(int, input().split())) for _ in range(N)]
+    V = [[0]*N for _ in range(N)]
+    dt = ((1,-1),(1,1),(-1,1),(-1,-1))
+
+    answer = -1
+    for sr in range(N-2):
+        for sc in range(1, N-1):
+            dfs(sr, sc, 0, [A[sr][sc]])
+    print(f'#{tc} {answer}')

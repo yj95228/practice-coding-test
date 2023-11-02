@@ -85,3 +85,78 @@ queue = deque([start])
 visited = set()
 visited.add(''.join(map(str,start)))
 print(solve())
+
+# 2차 풀이 (204ms -> 180ms)
+def solve():
+    sr, sc = start[1]
+    dd = 0
+
+    if start[0][0] == sr:
+        V[GARO][sr][sc] = 1
+    else:
+        V[SERO][sr][sc] = 1
+        dd = 1
+
+    queue = deque([(dd, sr, sc)])
+    turn = 0
+    while queue:
+        for _ in range(len(queue)):
+            dd, r, c = queue.popleft()
+            tree = [(r, c)]
+            if dd == GARO:
+                tree.extend([(r, c - 1), (r, c + 1)])
+            else:
+                tree.extend([(r - 1, c), (r + 1, c)])
+
+            # 도착 여부
+            three = True
+            for rr, cc in tree:
+                if (rr, cc) in end:
+                    three &= 1
+                else: three = 0
+            if three: return turn
+
+            # UDLR
+            for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+                nx, ny = r + dx, c + dy
+                if V[dd][nx][ny]: continue
+                for rr, cc in tree:
+                    nnx, nny = rr + dx, cc + dy
+                    if A[nnx][nny]: break
+                else:
+                    V[dd][nx][ny] = 1
+                    queue.append((dd, nx, ny))
+
+            # 회전
+            dd ^= 1
+            flag = False
+            if V[dd][r][c]: continue
+            for dx in [-1,0,1]:
+                if flag: break
+                for dy in [-1,0,1]:
+                    if A[r + dx][c + dy]:
+                        flag = True
+                        break
+            if not flag:
+                V[dd][r][c] = 1
+                queue.append((dd, r, c))
+        turn += 1
+    return 0
+
+N = int(input())
+A = [[1]*(N+2)] + [[1] + list(input().rstrip()) + [1] for _ in range(N)] + [[1]*(N+2)]
+V = [[[0]*(N+2) for _ in range(N+2)] for _ in range(2)] # 중간지점 기준 가로/세로
+start, end = [], []
+GARO, SERO = 0, 1
+for r in range(1, N+1):
+    for c in range(1, N+1):
+        if A[r][c] == 'B':
+            A[r][c] = 0
+            start.append((r, c))
+        elif A[r][c] == 'E':
+            A[r][c] = 0
+            end.append((r, c))
+        else:
+            A[r][c] = int(A[r][c])
+
+print(solve())
