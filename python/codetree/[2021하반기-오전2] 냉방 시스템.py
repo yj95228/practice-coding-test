@@ -130,3 +130,103 @@ for time in range(1,101):
     matrix = narr
 
 else: print(-1)
+
+# 2차 풀이
+import sys
+input = sys.stdin.readline
+
+def aircon(x, y):
+    d = A[x][y]-2
+    dx, dy = dt[d]
+    nx, ny = x+dx, y+dy
+    V = [[0]*N for _ in range(N)]
+    V[nx][ny] = 1
+    queue = [(nx, ny)]
+    B[nx][ny] += 5
+    num = 4
+    while queue and num:
+        next_q = []
+        for r, c in queue:
+            for i, (dx, dy) in enumerate(wind[d]):
+                for dd, ddx, ddy in air_walls[d][i]:
+                    nnx, nny = r+ddx, c+ddy
+                    if (nnx, nny) in wall[dd]: break
+                else:
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+                        V[nx][ny] = 1
+                        B[nx][ny] += num
+                        next_q.append((nx, ny))
+        queue = next_q
+        num -= 1
+
+N, M, K = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+wall = [[] for _ in range(4)]
+for _ in range(M):
+    x, y, s = map(int, input().split())
+    if s == 0:  # 가로
+        wall[1].append((x-2, y-1))
+        wall[3].append((x-1, y-1))
+    else:       # 세로
+        wall[0].append((x-1, y-2))
+        wall[2].append((x-1, y-1))
+wind = [
+    [(0,-1),(-1,-1),(1,-1)],
+    [(-1,0),(-1,-1),(-1,1)],
+    [(0,1),(-1,1),(1,1)],
+    [(1,0),(1,-1),(1,1)]
+]
+air_walls = [
+    [[(2,0,0)],[(2,-1,0),(1,-1,0)],[(2,1,0),(3,1,0)]],
+    [[(3,0,0)],[(3,0,-1),(0,0,-1)],[(3,0,1),(2,0,1)]],
+    [[(0,0,0)],[(0,-1,0),(1,-1,0)],[(0,1,0),(3,1,0)]],
+    [[(1,0,0)],[(1,0,-1),(0,0,-1)],[(1,0,1),(2,0,1)]],
+]
+B = [[0]*N for _ in range(N)]
+dt = ((0,-1),(-1,0),(0,1),(1,0))
+check, side = [], []
+for r in range(N):
+    for c in range(N):
+        if r in (0, N-1) or c in (0, N-1):
+            side.append((r, c))
+        if 2 <= A[r][c] <= 5:
+            aircon(r, c)
+        elif A[r][c] == 1:
+            check.append((r, c))
+
+C = [[0]*N for _ in range(N)]
+for time in range(1, 100):
+    # 1. 에어컨 바람 나오기
+    for r in range(N):
+        for c in range(N):
+            C[r][c] += B[r][c]
+
+    # 2. 시원한 공기 섞이기
+    D = [row[:] for row in C]
+    for r in range(N):
+        for c in range(N):
+            for d, (dx, dy) in enumerate(((1,0),(0,1))):
+                nx, ny = r+dx, c+dy
+                if 0 <= nx < N and 0 <= ny < N and (nx, ny) not in wall[3-d]:
+                    diff = abs(C[r][c]-C[nx][ny])//4
+                    if not diff: continue
+                    elif C[r][c] > C[nx][ny]:
+                        D[r][c] -= diff
+                        D[nx][ny] += diff
+                    else:
+                        D[r][c] += diff
+                        D[nx][ny] -= diff
+
+    # 3. 외벽 칸 시원함 1 감소
+    for r, c in side:
+        D[r][c] = max(D[r][c]-1, 0)
+
+    # 4. 공기 체크
+    for r, c in check:
+        if D[r][c] < K: break
+    else:
+        print(time)
+        break
+    C = D
+else: print(-1)
