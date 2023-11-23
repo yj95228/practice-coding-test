@@ -12,7 +12,7 @@ def union(a, b):
             rank[b] += 1
 
 def find(x):
-    while parents[x]!=x:
+    while parents[x] != x:
         x = parents[x]
     return x
 
