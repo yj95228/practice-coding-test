@@ -210,3 +210,69 @@ for _ in range(M):
     matrix = narr
 
 print(answer)
+
+# 3차 풀이
+N, M, K, C = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+smell = [[0]*N for _ in range(N)]
+answer = 0
+for _ in range(M):
+    B = [row[:] for row in A]
+    cnts = [[0]*N for _ in range(N)]
+    for r in range(N):
+        for c in range(N):
+            if A[r][c] > 0:
+                for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < N and 0 <= ny < N:
+                        if A[nx][ny] > 0:
+                            B[r][c] += 1
+                        elif not A[nx][ny] and not smell[nx][ny]:
+                            cnts[r][c] += 1
+    
+    A = [row[:] for row in B]
+    for r in range(N):
+        for c in range(N):
+            if B[r][c] > 0:
+                if cnts[r][c]:
+                    for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+                        nx, ny = r+dx, c+dy
+                        if 0 <= nx < N and 0 <= ny < N and not B[nx][ny] and not smell[nx][ny]:
+                            A[nx][ny] += B[r][c]//cnts[r][c]
+    
+    sr, sc, mx = 0, 0, -987654321
+    for r in range(N):
+        for c in range(N):
+            if A[r][c] > 0:
+                cnt = A[r][c]
+                for dx, dy in ((1,1),(1,-1),(-1,1),(-1,-1)):
+                    for k in range(1, K+1):
+                        nx, ny = r+k*dx, c+k*dy
+                        if 0 <= nx < N and 0 <= ny < N and A[nx][ny] > 0:
+                            cnt += A[nx][ny]
+                        else: break
+                if cnt > mx:
+                    sr, sc, mx = r, c, cnt
+
+    if A[sr][sc] > 0:
+        answer += A[sr][sc]
+        A[sr][sc] = 0
+        smell[sr][sc] = C+1
+        for dx, dy in ((1,1),(1,-1),(-1,1),(-1,-1)):
+            for k in range(1, K+1):
+                nx, ny = sr+k*dx, sc+k*dy
+                if 0 <= nx < N and 0 <= ny < N:
+                    smell[nx][ny] = C+1
+                    if A[nx][ny] > 0:
+                        answer += A[nx][ny]
+                        A[nx][ny] = 0
+                    else: break
+
+    else: smell[sr][sc] = C+1
+
+    for r in range(N):
+        for c in range(N):
+            if smell[r][c] > 0:
+                smell[r][c] -= 1
+
+print(answer)
