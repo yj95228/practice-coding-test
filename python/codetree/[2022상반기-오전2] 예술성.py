@@ -170,3 +170,81 @@ for turn in range(4):
     matrix = rotate(matrix)
 
 print(answer)
+
+
+# 3차 풀이
+def dfs(x, y, idx):
+    G[x][y] = idx
+    stack = [(x, y)]
+    num = A[x][y]
+    cnt = 1
+    while stack:
+        r, c = stack.pop()
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not G[nx][ny] and A[nx][ny] == num:
+                G[nx][ny] = idx
+                stack.append((nx, ny))
+                cnt += 1
+    return cnt, num, x, y
+
+def find(x, y, num, g):
+    V = [[0]*N for _ in range(N)]
+    stack = [(x, y)]
+    V[x][y] = 1
+    cnt = 0
+    while stack:
+        r, c = stack.pop()
+        for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+            nx, ny = r + dx, c + dy
+            if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+                if G[nx][ny] == num:
+                    V[nx][ny] = 1
+                    stack.append((nx, ny))
+                elif G[nx][ny] == g:
+                    cnt += 1
+    return cnt
+
+N = int(input())
+turn = dict()
+for r in range(N):
+    for c in range(N):
+        if r == N//2 or c == N//2:
+            turn[(r, c)] = (N-c-1, r)
+
+def rotate(A):
+    B = [row[:] for row in A]
+    for (r, c), (nx, ny) in turn.items():
+        B[nx][ny] = A[r][c]
+    for r in range(N // 2):
+        for c in range(N // 2):
+            B[c][N // 2 - r - 1] = A[r][c]
+            B[N // 2 + 1 + c][N // 2 - r - 1] = A[N // 2 + 1 + r][c]
+            B[c][N - r - 1] = A[r][N // 2 + 1 + c]
+            B[N // 2 + 1 + c][N - r - 1] = A[N // 2 + 1 + r][N // 2 + 1 + c]
+    return B
+
+A = [list(map(int, input().split())) for _ in range(N)]
+answer = 0
+for time in range(4):
+    G = [[0]*N for _ in range(N)]
+    group = []
+    idx = 1
+    for r in range(N):
+        for c in range(N):
+            if not G[r][c]:
+                group.append(dfs(r, c, idx))
+                idx += 1
+
+    for i in range(idx-2):
+        cnt1, num1, r1, c1 = group[i]
+        for j in range(i+1, idx-1):
+            cnt2, num2, r2, c2 = group[j]
+            if cnt1 > num1:
+                answer += (cnt1+cnt2)*num1*num2*find(r1, c1, i+1, j+1)
+            else:
+                answer += (cnt1+cnt2)*num1*num2*find(r2, c2, j+1, i+1)
+
+    if time == 3: break
+    A = rotate(A)
+print(answer)

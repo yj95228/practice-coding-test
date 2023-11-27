@@ -246,3 +246,84 @@ for _ in range(K):
                     break
     round = (round+1)%(4*N)
 print(answer)
+
+# 3차 풀이
+def dfs(x, y, idx):
+    stack = [(1, x, y)]
+    lst = [(x, y)]
+    cnt = 1
+    while stack:
+        num, r, c = stack.pop()
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+                if num == 1 and A[nx][ny] == 2:
+                    stack.append((2, nx, ny))
+                    lst.append((nx, ny))
+                    cnt += 1
+                elif num == 2 and A[nx][ny] in (2,3):
+                    stack.append((A[nx][ny], nx, ny))
+                    lst.append((nx, ny))
+                    cnt += 1
+                elif num in (3,4) and A[nx][ny] in (4,1):
+                    stack.append((A[nx][ny], nx, ny))
+                    lst.append((nx, ny))
+                else: continue
+                V[nx][ny] = idx
+                if A[nx][ny] == 1: return cnt, lst[:-1]
+
+def make_rounds():
+    rounds = []
+    for r in range(N):
+        round = []
+        for c in range(N):
+            round.append((r, c))
+        rounds.append(round)
+    for c in range(N):
+        round = []
+        for r in range(N-1, -1, -1):
+            round.append((r, c))
+        rounds.append(round)
+    for r in range(N-1, -1, -1):
+        round = []
+        for c in range(N-1, -1, -1):
+            round.append((r, c))
+        rounds.append(round)
+    for c in range(N-1, -1, -1):
+        round = []
+        for r in range(N):
+            round.append((r, c))
+        rounds.append(round)
+    return rounds
+
+def get_score(k):
+    for r, c in rounds[k%(4*N)]:
+        for i, group in enumerate(groups):
+            if (r, c) in group[:cnts[i]]:
+                idx = group.index((r, c))
+                groups[i] = group[:cnts[i]][::-1] + group[cnts[i]:][::-1]
+                return (idx+1)**2
+    return 0
+
+N, M, K = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+rounds = make_rounds()
+
+V = [[0]*N for _ in range(N)]
+groups = []
+cnts = []
+idx = 1
+for r in range(N):
+    for c in range(N):
+        if A[r][c] == 1:
+            cnt, group = dfs(r, c, idx)
+            groups.append(group)
+            cnts.append(cnt)
+            idx += 1
+
+answer = 0
+for k in range(K):
+    for i, group in enumerate(groups):
+        groups[i] = [group[-1]] + group[:-1]
+    answer += get_score(k)
+print(answer)

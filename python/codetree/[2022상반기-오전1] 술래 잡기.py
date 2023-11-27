@@ -167,3 +167,72 @@ for turn in range(1,K+1):
     sr, sc, sd = nx, ny, (sd+1)%(2*N*N-2)
     answer += turn*result
 print(answer)
+
+# 3차 풀이
+def make_snail():
+    snail_dt = ((-1, 0), (0, 1), (1, 0), (0, -1))
+    V = [[0] * N for _ in range(N)]
+    sr, sc, sd = N // 2, N // 2, -1
+    V[sr][sc] = 1
+    snail = [(sr, sc)]
+    for _ in range(N * N - 1):
+        dx, dy = snail_dt[(sd + 1) % 4]
+        nx, ny = sr + dx, sc + dy
+        if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+            V[nx][ny] = 1
+            snail.append((nx, ny))
+            sr, sc, sd = nx, ny, (sd + 1) % 4
+        else:
+            dx, dy = snail_dt[sd]
+            nx, ny = sr + dx, sc + dy
+            V[nx][ny] = 1
+            snail.append((nx, ny))
+            sr, sc = nx, ny
+    return snail + snail[::-1][1:-1]
+
+
+N, M, H, K = map(int, input().split())
+tree = [[0] * N for _ in range(N)]
+dt = ((0, 1), (1, 0), (0, -1), (-1, 0))
+runner = [list(map(lambda x: int(x) - 1, input().split())) for _ in range(M)]
+for _ in range(H):
+    x, y = map(lambda x: int(x) - 1, input().split())
+    tree[x][y] = 1
+snail = make_snail()
+
+sr, sc = N // 2, N // 2
+dead = [0] * M
+answer = 0
+for turn in range(1, K + 1):
+    for i, (x, y, d) in enumerate(runner):
+        if dead[i]: continue
+        if abs(x - sr) + abs(y - sc) <= 3:
+            dx, dy = dt[d]
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < N and 0 <= ny < N:
+                if (nx, ny) != (sr, sc):
+                    runner[i] = nx, ny, d
+            else:
+                d = (d + 2) % 4
+                dx, dy = dt[d]
+                nx, ny = x + dx, y + dy
+                if (nx, ny) != (sr, sc):
+                    runner[i] = nx, ny, d
+
+    sr, sc = snail[turn % len(snail)]
+    nnx, nny = snail[(turn + 1) % len(snail)]
+    dx, dy = nnx - sr, nny - sc
+    cnt = 0
+    for i in range(3):
+        nx, ny = sr + i * dx, sc + i * dy
+        if 0 <= nx < N and 0 <= ny < N:
+            for j, (x, y, d) in enumerate(runner):
+                if dead[j] or tree[x][y]: continue
+                if (x, y) == (nx, ny):
+                    cnt += 1
+                    dead[j] = 1
+        else:
+            break
+    answer += turn * cnt
+
+print(answer)
