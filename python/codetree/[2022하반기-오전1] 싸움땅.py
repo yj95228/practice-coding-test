@@ -200,3 +200,81 @@ for _ in range(K):
                 heappush(matrix[nx][ny], gun)
 
 print(*score)
+
+# 3차 풀이
+N, M, K = map(int, input().split())
+A = [list(map(lambda x: [int(x)], input().split())) for _ in range(N)]
+dt = ((-1, 0), (0, 1), (1, 0), (0, -1))  # ↑, →, ↓, ←
+P = [[0] * N for _ in range(N)]
+players = []
+for idx in range(1, M + 1):
+    x, y, d, s = map(int, input().split())
+    P[x - 1][y - 1] = idx
+    players.append([x - 1, y - 1, d, s, 0])
+
+score = [0] * M
+for _ in range(K):
+    for idx in range(M):
+        r, c, d, s, g = players[idx]
+        dx, dy = dt[d]
+        nx, ny = r + dx, c + dy
+        if not (0 <= nx < N and 0 <= ny < N):
+            d = (d + 2) % 4
+            dx, dy = dt[d]
+            nx, ny = r + dx, c + dy
+            players[idx][2] = d
+
+        # 플레이어가 있으면
+        if P[nx][ny]:
+            other = P[nx][ny] - 1
+            r2, c2, d2, s2, g2 = players[other]
+            if s + g > s2 + g2:
+                win, lose = idx, other
+            elif s + g == s2 + g2:
+                if s > s2:
+                    win, lose = idx, other
+                else:
+                    win, lose = other, idx
+            else:
+                win, lose = other, idx
+            r1, c1, d1, s1, g1 = players[win]
+            r2, c2, d2, s2, g2 = players[lose]
+            score[win] += (s1 + g1) - (s2 + g2)
+            P[r1][c1] = P[r2][c2] = 0
+
+            # 진 플레이어
+            players[lose][-1] = 0
+            A[nx][ny].append(g2)
+            for i in range(4):
+                dx, dy = dt[(d2 + i) % 4]
+                nnx, nny = nx + dx, ny + dy
+                if 0 <= nnx < N and 0 <= nny < N and not P[nnx][nny]:
+                    P[nnx][nny] = lose + 1
+                    mg = 0
+                    if A[nnx][nny]:
+                        mg = max(A[nnx][nny])
+                        A[nnx][nny].remove(mg)
+                    players[lose] = [nnx, nny, (d2 + i) % 4, s2, mg]
+                    break
+
+            # 이긴 플레이어
+            mg = 0
+            if g1 < max(A[nx][ny]):
+                mg = max(A[nx][ny])
+                A[nx][ny].remove(mg)
+                A[nx][ny].append(g1)
+                players[win][-1] = mg
+            P[nx][ny] = win + 1
+            players[win] = [nx, ny, d1, s1, max(g1, mg)]
+
+        else:
+            mg = 0
+            if A[nx][ny]:
+                if g < max(A[nx][ny]):
+                    mg = max(A[nx][ny])
+                    A[nx][ny].remove(mg)
+                    A[nx][ny].append(g)
+            players[idx] = [nx, ny, d, s, max(g, mg)]
+            P[r][c], P[nx][ny] = P[nx][ny], P[r][c]
+
+print(*score)
