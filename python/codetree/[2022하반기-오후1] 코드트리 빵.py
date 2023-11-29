@@ -165,3 +165,106 @@ while True:
         cant_go[br][bc] = True
 
     time += 1
+
+# 3차 풀이
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+
+def go_basecamp(who, x, y):
+    q = [(x, y)]
+    visited = [[e[who] for e in row] for row in V]
+    visited[x][y] = 1
+    while q:
+        next_q = []
+        s = set()
+        for r, c in q:
+            if A[r][c]:
+                s.add((r, c))
+            for dx, dy in ((-1, 0), (0, -1), (0, 1), (1, 0)):
+                nx, ny = r + dx, c + dy
+                if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+                    visited[nx][ny] = 1
+                    next_q.append((nx, ny))
+        if s: return min(s)
+        q = next_q
+
+
+def bfs(x, y, who):
+    er, ec = cvs[who]
+    visited = [[e[who] for e in row] for row in V]
+    q = [(x, y)]
+    visited[x][y] = 1
+    dist = 0
+    while q:
+        next_q = []
+        for r, c in q:
+            if (r, c) == (er, ec): return dist
+            for dx, dy in ((-1, 0), (0, -1), (0, 1), (1, 0)):
+                nx, ny = r + dx, c + dy
+                if 0 <= nx < N and 0 <= ny < N and not visited[nx][ny]:
+                    visited[nx][ny] = 1
+                    next_q.append((nx, ny))
+        q = next_q
+        dist += 1
+
+
+N, M = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+cvs, queue = [], deque()
+for t in range(1, M + 1):
+    x, y = map(lambda x: int(x) - 1, input().split())
+    queue.append((t - 1, x, y))
+    cvs.append((x, y))
+
+base, arrive = [0] * M, [0] * M
+V = [[[0] * M for _ in range(N)] for _ in range(N)]
+time = 1
+while queue:
+    visited = set()
+    for _ in range(len(queue)):
+        who, r, c = queue.popleft()
+
+        # 아직 시간 안 됐으면 그대로 다시 queue에 넣기
+        if time < who + 1:
+            queue.append((who, r, c))
+            continue
+
+        # 이미 도착한 사람은 더 이상 가지 않아도 됨
+        elif arrive[who]:
+            continue
+
+        # t <= m이면 편의점에서 가장 가까운 베이스캠프 가기
+        elif not base[who] and time == who + 1:
+            r, c = go_basecamp(who, r, c)
+            base[who] = 1
+            visited.add((r, c))
+
+        s = set()
+        for dx, dy in ((-1, 0), (0, -1), (0, 1), (1, 0)):
+            nx, ny = r + dx, c + dy
+            if 0 <= nx < N and 0 <= ny < N and (not V[nx][ny][who] or time <= V[nx][ny][who]):
+                dist = bfs(nx, ny, who)
+                if dist is not None: s.add((dist, nx, ny))
+
+        if s:
+            dist, nx, ny = min(s)
+            if dist:
+                V[nx][ny][who] = time + 1
+                queue.append((who, nx, ny))
+
+            # 편의점 도착
+            else:
+                arrive[who] = time + 1
+                visited.add((nx, ny))
+                continue
+
+    for r, c in visited:
+        for m in range(M):
+            V[r][c][m] = time
+
+    time += 1
+
+print(max(arrive))
