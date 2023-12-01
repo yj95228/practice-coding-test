@@ -76,3 +76,64 @@ for _ in range(Q):
     # 최고의 토끼 선정
     else:
         print(max([who[-1] for who in rabbit.values()]))
+
+# 2차 풀이
+Q = int(input())
+comm, N, M, P, *init = list(map(int, input().split()))
+obj = dict()
+rabbit = []
+for p in range(P):
+    pid, d = init[2*p], init[2*p+1]
+    obj[pid] = [d, 0]
+    heappush(rabbit, (0, 0, 0, 0, pid))
+
+for _ in range(Q-2):
+    comm, a, b = map(int, input().split())
+
+    if comm == 200:
+        is_jump = dict()
+        for _ in range(a):
+            jump, rc, r, c, pid = heappop(rabbit)
+            d, _ = obj[pid]
+            mrc, mr, mc = 0, 0, 0
+            for dx, dy in ((1,0),(0,1),(0,-1),(-1,0)):
+                nx, ny = (r+d*dx)%(2*(N-1)), (c+d*dy)%(2*(M-1))
+                if nx >= N: nx = 2*(N-1)-nx
+                if ny >= M: ny = 2*(M-1)-ny
+                if mrc < nx+ny:
+                    mrc, mr, mc = nx+ny, nx, ny
+                elif mrc == nx+ny:
+                    if mr < nx:
+                        mrc, mr, mc = nx+ny, nx, ny
+                    elif mr == nx:
+                        if mc < ny:
+                            mrc, mr, mc = nx+ny, nx, ny
+            heappush(rabbit, (jump+1, mrc, mr, mc, pid))
+            is_jump[pid] = [mrc, mr, mc]
+
+            for p in obj:
+                if p == pid: continue
+                obj[p][1] += mrc+2
+
+        mrc, mr, mc, best = 0, 0, 0, 0
+        for pid, (rc, r, c) in is_jump.items():
+            if mrc < rc:
+                mrc, mr, mc, best = rc, r, c, pid
+            elif mrc == rc:
+                if mr < r:
+                    mrc, mr, mc, best = rc, r, c, pid
+                elif mr == r:
+                    if mc < c:
+                        mrc, mr, mc, best = rc, r, c, pid
+                    elif mc == c:
+                        if best < pid:
+                            mrc, mr, mc, best = rc, r, c, pid
+        obj[best][1] += b
+
+    elif comm == 300:
+        obj[a][0] *= b
+
+answer = 0
+for pid in obj:
+    answer = max(answer, obj[pid][1])
+print(answer)
