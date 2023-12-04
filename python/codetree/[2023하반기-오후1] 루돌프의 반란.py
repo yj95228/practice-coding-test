@@ -150,3 +150,124 @@ for turn in range(1, M+1):
         santa[p][-1] += 1
 
 print(*[s[-1] for s in santa[1:]])
+
+# 2차 풀이
+def in_range(r, c):
+    return 0 <= r < N and 0 <= c < N
+
+def calc(r, c, x, y):
+    return (r-x)**2+(c-y)**2
+
+def interact(idx, r, c, dx, dy):
+    stack = [(idx, r, c)]
+    while True:
+        p, r, c = stack[-1]
+        if A[r][c]:
+            nx, ny = r+dx, c+dy
+            if in_range(nx, ny):
+                stack.append((A[r][c], nx, ny))
+            else:
+                stack.append((A[r][c], -1, -1))
+                break
+        else: break
+    while stack:
+        p, r, c = stack.pop()
+        if r == -1:
+            state[p][1] = 1
+        else:
+            santa[p] = [r, c]
+            A[r][c] = p
+
+N, M, P, C, D = map(int, input().split())
+rr, rc = map(lambda x: int(x)-1, input().split())
+A = [[0]*N for _ in range(N)]
+santa = [[] for _ in range(P+1)]
+state = [[] for _ in range(P+1)]
+for _ in range(P):
+    p, sr, sc = map(int, input().split())
+    A[sr-1][sc-1] = p
+    santa[p] = [sr-1, sc-1]             # r, c
+    state[p] = [0]*3                    # 기절, 죽음, 점수
+
+for turn in range(1, M+1):
+    # 루돌프 움직이기
+    # 게임에서 탈락하지 않는 산타 중 가까운 산타 찾기
+    mn, mr, mc, midx = 987654321, -1, -1, -1
+    for p in range(1, P+1):
+        if state[p][1]: continue
+        sr, sc = santa[p]
+        dist = calc(rr, rc, sr, sc)
+        if dist < mn:
+            mn, mr, mc, midx = dist, sr, sc, p
+        if dist == mn:
+            if mr < sr:
+                mn, mr, mc, midx = dist, sr, sc, p
+            elif mr == sr:
+                if mc < sc:
+                    mn, mr, mc, midx = dist, sr, sc, p
+
+    # 8방향 중 찾기
+    mn, mrr, mrc, mdx, mdy = 987654321, -1, -1, -1, -1
+    for dx, dy in ((1,0),(0,1),(-1,0),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)):
+        nx, ny = rr+dx, rc+dy
+        if in_range(nx, ny):
+            dist = calc(nx, ny, mr, mc)
+            if dist < mn:
+                mn, mrr, mrc, mdx, mdy = dist, nx, ny, dx, dy
+    rr, rc = mrr, mrc
+
+    # 산타와 부딪히면 충돌
+    if (mr, mc) == (rr, rc):
+        A[mr][mc] = 0
+        nx, ny = mr+C*mdx, mc+C*mdy
+        state[midx][0] = turn+2
+        state[midx][2] += C
+        if in_range(nx, ny):
+            santa[midx] = nx, ny
+            if A[nx][ny]:
+                interact(midx, nx, ny, mdx, mdy)
+            else: A[nx][ny] = midx
+        else:
+            state[midx][1] = 1
+
+    # 1~P 산타 움직이기
+    for p in range(1, P+1):
+        if state[p][1]: continue
+        elif turn < state[p][0]: continue
+        sr, sc = santa[p]
+        # 루돌프와 가까워지는 방향 찾아서 움직이기 (다른 산타 있는 곳 X)
+        mn, msr, msc, mdx, mdy = calc(sr, sc, rr, rc), -1, -1, -1, -1
+        for dx, dy in ((-1,0),(0,1),(1,0),(0,-1)):
+            nx, ny = sr+dx, sc+dy
+            if in_range(nx, ny) and not A[nx][ny]:
+                dist = calc(nx, ny, rr, rc)
+                if dist < mn:
+                    mn, msr, msc, mdx, mdy = dist, nx, ny, dx, dy
+        if mn == calc(sr, sc, rr, rc): continue
+
+        if (msr, msc) == (rr, rc):
+            A[msr][msc] = 0
+            nx, ny = msr-D*mdx, msc-D*mdy
+            state[p][0] = turn + 2
+            state[p][2] += D
+            if in_range(nx, ny):
+                A[sr][sc] = 0
+                santa[p] = [nx, ny]
+                if A[nx][ny] and A[nx][ny] != p:
+                    interact(p, nx, ny, -mdx, -mdy)
+                else: A[nx][ny] = p
+            else:
+                state[p][1] = 1
+                A[sr][sc] = 0
+        elif msr != -1:
+            A[sr][sc], A[msr][msc] = A[msr][msc], A[sr][sc]
+            santa[p] = [msr, msc]
+
+    flag = False
+    for p in range(1, P+1):
+        if not state[p][1]:
+            flag = True
+            state[p][2] += 1
+    if not flag: break
+
+print(*[state[p][2] for p in range(1, P+1)])

@@ -82,3 +82,76 @@ for i in range(1, N+1):
     if dead[i]: continue
     answer += robot[i][-1]
 print(answer)
+
+# 2번째 풀이
+def can_move(i, d):
+    dx, dy = dt[d]
+    queue = [i]
+    robot_idx = {i}
+    while queue:
+        next_q = []
+        for idx in queue:
+            for r, c in robots[idx]:
+                nx, ny = r+dx, c+dy
+                if A[nx][ny] == 2: return None
+                if B[nx][ny] != idx:
+                    next_q.append(B[nx][ny])
+                    robot_idx.add(idx)
+        queue = next_q
+    return robot_idx
+
+def play(i, d):
+    global move
+    NB = [[0]*(L+2) for _ in range(L+2)]
+    robot_idx = can_move(i, d)  # 움직일 수 있는 로봇 리스트
+    if robot_idx is None: return B
+
+    # 점수 계산 + robots 리스트 변경
+    dx, dy = dt[d]
+    for idx in robot_idx:
+        move[idx] = 1
+        tmp = []
+        for r, c in robots[idx]:
+            nx, ny = r+dx, c+dy
+            tmp.append((nx, ny))
+            if A[nx][ny] == 1 and i != idx:
+                robot[idx][1] += 1
+        robots[idx] = tmp
+
+    # 그리기
+    for idx in range(1, N+1):
+        k, s = robot[idx]
+        if k <= s: continue
+        for r, c in robots[idx]:
+            NB[r][c] = idx
+    return NB
+
+L, N, Q = map(int, input().split())
+A = [[2]*(L+2)] + [[2] + list(map(int, input().split())) + [2] for _ in range(L)] + [[2]*(L+2)]
+B = [[0]*(L+2) for _ in range(L+2)]
+robot = [[]]
+robots = [[]]
+for idx in range(1, N+1):
+    r, c, h, w, k = map(int, input().split())
+    tmp = []
+    for rr in range(h):
+        for cc in range(w):
+            B[r+rr][c+cc] = idx
+            tmp.append((r+rr, c+cc))
+    robot.append([k, 0])
+    robots.append(tmp)
+
+dt = ((-1,0),(0,1),(1,0),(0,-1))
+for _ in range(Q):
+    i, d = map(int, input().split())
+    k, s = robot[i]
+    if k <= s: continue
+    move = [0]*(N+1)
+    B = play(i, d)
+
+answer = 0
+for i in range(1, N+1):
+    k, s = robot[i]
+    if k <= s: continue
+    answer += s
+print(answer)
