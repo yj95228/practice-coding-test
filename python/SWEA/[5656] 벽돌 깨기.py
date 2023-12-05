@@ -61,3 +61,51 @@ for tc in range(1,T+1):
     answer = 987654321
     recur(0, matrix)
     print(f'#{tc} {answer}')
+
+# 2차 풀이
+from itertools import product
+
+
+def play(A, pp):
+    B = [row[:] for row in A]
+    for p in pp:
+        rr = -1
+        for r in range(H):
+            if B[r][p]:
+                rr = r;
+                break
+        if rr == -1: continue
+
+        queue = [(B[rr][p], rr, p)]
+        while queue:
+            next_q = []
+            for num, r, c in queue:
+                B[r][c] = 0
+                for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+                    for k in range(1, num):
+                        nx, ny = r + k * dx, c + k * dy
+                        if 0 <= nx < H and 0 <= ny < W:
+                            if B[nx][ny]:
+                                next_q.append((B[nx][ny], nx, ny))
+            queue = next_q
+
+        C = [[0] * W for _ in range(H)]
+        for c in range(W):
+            now = H - 1
+            for r in range(H - 1, -1, -1):
+                if B[r][c]:
+                    C[now][c] = B[r][c]
+                    now -= 1
+        B = C
+    return len([x for row in B for x in row if x])
+
+
+T = int(input())
+for tc in range(1, T + 1):
+    N, W, H = map(int, input().split())
+    A = [list(map(int, input().split())) for _ in range(H)]
+    answer = 987654321
+    for p in product(range(W), repeat=N):
+        answer = min(answer, play(A, p))
+        if not answer: break
+    print(f'#{tc} {answer}')

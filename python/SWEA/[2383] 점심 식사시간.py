@@ -47,3 +47,47 @@ for tc in range(1, T+1):
     answer = 987654321
     recur(0, [], [])
     print(f'#{tc} {answer}')
+
+# 2차 풀이
+from collections import deque
+from itertools import product
+
+def solve(p):
+    stairs = [[] for _ in range(2)]
+    for i in range(len(people)):
+        r, c = people[i]
+        idx = p[i]
+        length, rr, cc = stair[idx]
+        stairs[idx].append(abs(rr-r)+abs(cc-c))
+
+    mx = 0
+    for i, st in enumerate(stairs):
+        queue = deque()
+        time = stair[i][0]
+        for s in sorted(st):
+            if len(queue) >= 3:
+                out = queue.popleft()
+                mx = max(mx, out+time)
+                queue.append(max(s+1, out+time))
+            else:
+                queue.append(s+1)
+        while queue:
+            mx = max(mx, queue.popleft()+time)
+    return mx
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    A = [list(map(int, input().split())) for _ in range(N)]
+    people, stair = [], []
+    for r in range(N):
+        for c in range(N):
+            if A[r][c] == 1:
+                people.append((r, c))
+            elif A[r][c] > 1:
+                stair.append((A[r][c], r, c))
+
+    answer = 987654321
+    for p in product(range(2), repeat=len(people)):
+        answer = min(answer, solve(p))
+    print(f'#{tc} {answer}')
