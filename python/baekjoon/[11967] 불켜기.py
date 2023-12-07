@@ -53,3 +53,48 @@ while queue:
             queue.append((nx,ny))
 
 print(answer)
+
+# 2차 풀이
+import sys
+
+input = sys.stdin.readline
+
+N, M = map(int, input().split())
+A = [[0] * N for _ in range(N)]
+obj = dict()
+for _ in range(M):
+    x, y, a, b = map(lambda x: int(x) - 1, input().split())
+    if (x, y) == (a, b): continue
+    if obj.get((x, y)):
+        obj[(x, y)].add((a, b))
+    else:
+        obj[(x, y)] = {(a, b)}
+
+answer = 1
+queue = {(0, 0)}
+V = [[0] * N for _ in range(N)]
+A[0][0] = V[0][0] = 1
+for r, c in obj[(0, 0)]:
+    if A[r][c]: continue
+    A[r][c] = 1
+    answer += 1
+while queue:
+    next_q = set()
+    for r, c in queue:
+        if obj.get((r, c)):
+            for rr, cc in obj[(r, c)]:
+                if A[rr][cc]: continue
+                A[rr][cc] = 1
+                answer += 1
+                for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+                    nx, ny = rr + dx, cc + dy
+                    if 0 <= nx < N and 0 <= ny < N and V[nx][ny]:
+                        next_q.add((nx, ny))
+                        break
+        for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+            nx, ny = r + dx, c + dy
+            if 0 <= nx < N and 0 <= ny < N and not V[nx][ny] and A[nx][ny]:
+                V[nx][ny] = 1
+                next_q.add((nx, ny))
+    queue = next_q
+print(answer)
