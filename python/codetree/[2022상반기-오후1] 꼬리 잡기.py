@@ -327,3 +327,71 @@ for k in range(K):
         groups[i] = [group[-1]] + group[:-1]
     answer += get_score(k)
 print(answer)
+
+# 4차 풀이
+def dfs(r, c):
+    V = [[0]*N for _ in range(N)]
+    V[r][c] = 1
+    t = [(r, c)]
+    stack = [(r, c)]
+    cnt = 1
+    while stack:
+        r, c = stack.pop()
+        for dx, dy in ((1,0),(0,1),(-1,0),(0,-1)):
+            nx, ny = r+dx, c+dy
+            if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]\
+            and A[nx][ny] and abs(A[r][c]-A[nx][ny]) <= 1:
+                if A[nx][ny] <= 3: cnt += 1
+                V[nx][ny] = 1
+                stack.append((nx, ny))
+                t.append((nx, ny))
+    return cnt, t
+
+def make_round():
+    rounds = []
+    for r in range(N):
+        roundd = []
+        for c in range(N):
+            roundd.append((r, c))
+        rounds.append(roundd)
+    for c in range(N):
+        roundd = []
+        for r in range(N-1, -1, -1):
+            roundd.append((r, c))
+        rounds.append(roundd)
+    for r in range(N-1, -1, -1):
+        roundd = []
+        for c in range(N-1, -1, -1):
+            roundd.append((r, c))
+        rounds.append(roundd)
+    for c in range(N-1, -1, -1):
+        roundd = []
+        for r in range(N):
+            roundd.append((r, c))
+        rounds.append(roundd)
+    return rounds
+
+def play():
+    global answer
+    for r, c in rounds[(k)%len(rounds)]:
+        for i, (cnt, team) in enumerate(teams):
+            if (r, c) in team[:cnt]:
+                idx = team[:cnt].index((r, c))
+                answer += (idx+1)**2
+                teams[i][1] = team[:cnt][::-1] + team[cnt:][::-1]
+                return
+
+N, M, K = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+teams = []
+for r in range(N):
+    for c in range(N):
+        if A[r][c] == 1:
+            teams.append(list(dfs(r, c)))
+rounds = make_round()
+answer = 0
+for k in range(K):
+    for i, (cnt, team) in enumerate(teams):
+        teams[i][1] = [team[-1]] + team[:-1]
+    play()
+print(answer)

@@ -236,3 +236,70 @@ for turn in range(1, K + 1):
     answer += turn * cnt
 
 print(answer)
+
+# 4차 풀이
+def make_snail():
+    snail_dt = ((-1,0),(0,1),(1,0),(0,-1))
+    V = [[0]*N for _ in range(N)]
+    sr, sc, sd = N//2, N//2, -1
+    V[sr][sc] = 1
+    snail = [(N//2, N//2)]
+    for _ in range(N*N-1):
+        dx, dy = snail_dt[(sd+1)%4]
+        nx, ny = sr+dx, sc+dy
+        if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+            V[nx][ny] = 1
+            sr, sc, sd = nx, ny, (sd+1)%4
+        else:
+            dx, dy = snail_dt[sd]
+            nx, ny = sr+dx, sc+dy
+            V[nx][ny] = 1
+            sr, sc = nx, ny
+        snail.append((sr, sc))
+    snail.extend(snail[1:-1][::-1])
+    return snail
+
+N, M, H, K = map(int, input().split())
+player, dead = [[]], [0]*(M+1)
+for idx in range(1, M+1):
+    x, y, d = map(lambda x: int(x)-1, input().split())
+    player.append([x, y, d])
+T = [[0]*N for _ in range(N)]
+for _ in range(H):
+    r, c = map(lambda x: int(x)-1, input().split())
+    T[r][c] = 1
+dt = ((0,1),(1,0),(0,-1),(-1,0))
+snail = make_snail()
+sr, sc = N//2, N//2
+
+answer = 0
+for k in range(1, K+1):
+    for m in range(1, M+1):
+        if dead[m]: continue
+        r, c, d = player[m]
+        if abs(r-sr)+abs(c-sc) > 3: continue
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+        if not (0 <= nx < N and 0 <= ny < N):
+            player[m][-1] = (d+2)%4
+            dx, dy = dt[(d+2)%4]
+            nx, ny = r+dx, c+dy
+        if (nx, ny) == (sr, sc): continue
+        player[m][0], player[m][1] = nx, ny
+    
+    sr, sc = snail[k%(len(snail))]
+    nx, ny = snail[(k+1)%(len(snail))]
+    dx, dy = nx-sr, ny-sc
+    for i in range(3):
+        nx, ny = sr+i*dx, sc+i*dy
+        if 0 <= nx < N and 0 <= ny < N:
+            if T[nx][ny]: continue
+            for idx in range(1, M+1):
+                if dead[idx]: continue
+                r, c, d = player[idx]
+                if (r, c) == (nx, ny):
+                    answer += k
+                    dead[idx] = 1
+        else: break
+    
+print(answer)

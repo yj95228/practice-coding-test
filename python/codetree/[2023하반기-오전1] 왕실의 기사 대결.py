@@ -155,3 +155,75 @@ for i in range(1, N+1):
     if k <= s: continue
     answer += s
 print(answer)
+
+# 3차 풀이
+def can_move(i, d):
+    dx, dy = dt[d]
+    queue = [i]
+    lst = {i}
+    while queue:
+        next_q = []
+        for i in queue:
+            for r, c in robots[i]:
+                nx, ny = r+dx, c+dy
+                if A[nx][ny] == 2: return False
+                elif B[nx][ny] and B[nx][ny] != i:
+                    next_q.append(B[nx][ny])
+                    lst.add(B[nx][ny])
+        queue = next_q
+    return lst
+        
+def move(B, i, d):
+    lst = can_move(i, d)
+    if lst:
+        BB = [[0]*(L+2) for _ in range(L+2)]
+        dx, dy = dt[d]
+        for idx in lst:
+            r, c = robot[idx][0], robot[idx][1]
+            nx, ny = r+dx, c+dy
+            robot[idx][0], robot[idx][1] = nx, ny
+            nlst, cnt = [], 0
+            for r, c in robots[idx]:
+                nx, ny = r+dx, c+dy
+                nlst.append((nx, ny))
+                if A[nx][ny] == 1: cnt += 1
+            robots[idx] = nlst
+            if i != idx:
+                robot[idx][-1] += cnt
+        for idx in range(1, N+1):
+            r, c, h, w, k, s = robot[idx]
+            if k <= s: continue
+            for r, c in robots[idx]:
+                BB[r][c] = idx
+        return BB
+    else:
+        return B
+
+L, N, Q = map(int, input().split())
+A = [[2]*(L+2)] + [[2] + list(map(int, input().split())) + [2] for _ in range(L)] + [[2]*(L+2)]
+B = [[0]*(L+2) for _ in range(L+2)]
+robot, robots = [[]], [[]]
+for idx in range(1, N+1):
+    r, c, h, w, k = map(int, input().split())
+    robot.append([r, c, h, w, k, 0])
+    lst = []
+    for dx in range(h):
+        for dy in range(w):
+            nx, ny = r+dx, c+dy
+            lst.append((nx, ny))
+            B[nx][ny] = idx
+    robots.append(lst)
+
+dt = ((-1,0),(0,1),(1,0),(0,-1))
+for _ in range(Q):
+    i, d = map(int, input().split())
+    r, c, h, w, k, s = robot[i]
+    if k <= s: continue
+    B = move(B, i, d)
+    
+answer = 0
+for i in range(1, N+1):
+    k, s = robot[i][-2], robot[i][-1]
+    if k <= s: continue
+    answer += s
+print(answer)

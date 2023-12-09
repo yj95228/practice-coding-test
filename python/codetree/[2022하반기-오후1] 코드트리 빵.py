@@ -268,3 +268,81 @@ while queue:
     time += 1
 
 print(max(arrive))
+
+# 4차 풀이
+def bfs(r, c, er, ec):
+    V = [row[:] for row in cant]
+    V[r][c] = 1
+    queue = [(r, c)]
+    dist = 0
+    while queue:
+        next_q = []
+        for r, c in queue:
+            if (r, c) == (er, ec): return dist
+            for dx, dy in ((-1,0),(0,-1),(0,1),(1,0)):
+                nx, ny = r+dx, c+dy
+                if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+                    V[nx][ny] = 1
+                    next_q.append((nx, ny))
+        queue = next_q
+        dist += 1
+    return 987654321
+
+
+N, M = map(int, input().split())
+A = [list(map(int, input().split())) for _ in range(N)]
+conv = [[]]
+for _ in range(M):
+    r, c = map(lambda x: int(x)-1, input().split())
+    conv.append((r, c))
+player = [[]]
+answer = [1] + [0]*M
+time = 1
+cant = [[0]*N for _ in range(N)]
+while True:
+    if 0 not in answer: break
+    
+    cant_list = []
+    for m in range(1, M+1):
+        # 1. ↑, ←, →, ↓ 의 우선 순위로 편의점 최단거리 향해 움직이기
+        if m < len(player):
+            if answer[m]: continue
+            r, c = player[m]
+            er, ec = conv[m]
+            rr, cc, mn = -1, -1, 987654321
+            for dx, dy in ((-1,0),(0,-1),(0,1),(1,0)):
+                nx, ny = r+dx, c+dy
+                if 0 <= nx < N and 0 <= ny < N and not cant[nx][ny]:
+                    mm = bfs(nx, ny, er, ec)
+                    if mm < mn:
+                        rr, cc, mn = nx, ny, mm
+            if mn != 987654321: player[m] = [rr, cc]
+            if (rr, cc) == (er, ec):
+                cant_list.append((rr, cc))
+                answer[m] = time
+    for r, c in cant_list:
+        cant[r][c] = 1
+    
+    if time <= M:
+        r, c = conv[time]
+        basecamp = []
+        queue = [(r, c)]
+        V = [row[:] for row in cant]
+        V[r][c] = 1
+        while queue:
+            next_q = []
+            for r, c in queue:
+                if A[r][c]: basecamp.append((r, c))
+                for dx, dy in ((-1,0),(0,-1),(0,1),(1,0)):
+                    nx, ny = r+dx, c+dy
+                    if 0 <= nx < N and 0 <= ny < N and not V[nx][ny]:
+                        V[nx][ny] = 1
+                        next_q.append((nx, ny))
+            if basecamp:
+                rr, cc = min(basecamp)
+                player.append([rr, cc])
+                cant[rr][cc] = 1
+                break
+            queue = next_q
+    time += 1
+print(max(answer))

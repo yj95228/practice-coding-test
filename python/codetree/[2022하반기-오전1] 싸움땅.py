@@ -278,3 +278,82 @@ for _ in range(K):
             P[r][c], P[nx][ny] = P[nx][ny], P[r][c]
 
 print(*score)
+
+# 4차 풀이
+N, M, K = map(int, input().split())
+A = [list(map(lambda x: [int(x)], input().split())) for _ in range(N)]
+P = [[0]*N for _ in range(N)]
+player = [[]]
+for idx in range(1, M+1):
+    x, y, d, s = map(int, input().split())
+    P[x-1][y-1] = idx
+    player.append([x-1, y-1, d, s, 0])
+dt = ((-1,0),(0,1),(1,0),(0,-1))
+answer = [0]*(M+1)
+for k in range(K):
+    for m in range(1, M+1):
+        r, c, d, s, g = player[m]
+        P[r][c] = 0
+        dx, dy = dt[d]
+        nx, ny = r+dx, c+dy
+        if not (0 <= nx < N and 0 <= ny < N):
+            player[m][2] = (d+2)%4
+            dx, dy = dt[(d+2)%4]
+            nx, ny = r+dx, c+dy
+        player[m][0], player[m][1] = nx, ny
+        if not P[nx][ny]:
+            if A[nx][ny]:
+                gun = max(A[nx][ny])
+                if gun > g:
+                    A[nx][ny].remove(gun)
+                    A[nx][ny].append(g)
+                    player[m][-1] = gun
+            P[nx][ny] = m
+        else:
+            r2, c2, d2, s2, g2 = player[P[nx][ny]]
+            diff, win, lose = -1, -1, -1
+            if (s+g) > (s2+g2):
+                win, lose = m, P[nx][ny]
+                diff = (s+g)-(s2+g2)
+            elif (s+g) == (s2+g2):
+                if s > s2:
+                    win, lose = m, P[nx][ny]
+                    diff = (s+g)-(s2+g2)
+                else:
+                    win, lose = P[nx][ny], m
+                    diff = (s2+g2)-(s+g)
+            else:
+                win, lose = P[nx][ny], m
+                diff = (s2+g2)-(s+g)
+            answer[win] += diff
+
+            # 진 플레이어
+            ng = player[lose][-1]
+            A[nx][ny].append(ng)
+            player[lose][-1] = 0
+            nd = player[lose][2]
+            for i in range(4):
+                dx, dy = dt[(nd+i)%4]
+                rr, cc = nx+dx, ny+dy
+                if 0 <= rr < N and 0 <= cc < N:
+                    if P[rr][cc]: continue
+                else: continue
+                player[lose][0], player[lose][1], player[lose][2] = rr, cc, (nd+i)%4
+                P[rr][cc] = lose
+                if A[rr][cc]:
+                    gg = max(A[rr][cc])
+                    if gg > 0:
+                        A[rr][cc].remove(gg)
+                        player[lose][-1] = gg
+                break 
+                
+            # 이긴 플레이어
+            ng = player[win][-1]
+            gg = max(A[nx][ny])
+            if gg > ng:
+                A[nx][ny].remove(gg)
+                A[nx][ny].append(ng)
+                player[win][-1] = gg
+            P[nx][ny] = win
+        
+print(*answer[1:])
