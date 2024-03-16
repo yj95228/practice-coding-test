@@ -1,5 +1,6 @@
 **/*.txt
 **/main.*
+**/solution.*
 .idea
 
 #java
