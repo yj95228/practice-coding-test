@@ -7,7 +7,7 @@
       "program": "${fileDirname}\\build\\${fileBasenameNoExtension}.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "C:/mingw64/bin",
+      "cwd": "C:/Users/82109/practice-coding-test/cpp",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
